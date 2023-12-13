@@ -1,4 +1,5 @@
 /* JFlex example: partial Java language lexer specification */
+package ParserLexer;
 import java_cup.runtime.*;
 
 /**
@@ -31,11 +32,11 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
 
-TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+TraditionalComment   = "/_" [^_] ~"_/" | "/_" "_"+ "/"
 // Comment can be the last line of the file, without line terminator.
-EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
-DocumentationComment = "/**" {CommentContent} "*"+ "/"
-CommentContent       = ( [^*] | \*+ [^/*] )*
+EndOfLineComment     = "@" {InputCharacter}* {LineTerminator}?
+DocumentationComment = "/__" {CommentContent} "_"+ "/"
+CommentContent       = ( [^_] | \_+ [^/_] )*
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
@@ -43,10 +44,11 @@ HexDigit = [0-9a-fA-F]
     // To use in CharLiteral, for Unicode escape sequences
 
 /* literals */
-DecIntegerLiteral = -? (0 | [1-9][0-9])*
+DecIntegerLiteral = -? (0 | [1-9][0-9]*)
 FloatLiteral      = {DecIntegerLiteral} \. [0-9]+ ([eE] [+-]? [0-9]+)?
     // Similar to DecIntegerLiteral, but with a decimal point and optional exponent
-BooleanLiteral    = "true" | "false"
+BooleanLiteralT   = "true"
+BooleanLiteralF   = "false"
 CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {HexDigit} ) \'
     // The second alternative is for Unicode escape sequences
 
@@ -55,50 +57,78 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 %%
 
 /* keywords */
-<YYINITIAL> "abstract"           { return symbol(sym.ABSTRACT); }
-<YYINITIAL> "boolean"            { return symbol(sym.BOOLEAN); }
-<YYINITIAL> "break"              { return symbol(sym.BREAK); }
-<YYINITIAL> "int"                { return symbol(sym.INT); }
-<YYINITIAL> "float"              { return symbol(sym.FLOAT); }
-<YYINITIAL> "boolean"            { return symbol(sym.BOOLEAN); }
-<YYINITIAL> "char"               { return symbol(sym.CHAR); }
-<YYINITIAL> "string"             { return symbol(sym.STRING); }
+<YYINITIAL> "boolean"            { return symbol(sym.COLACHO); }
+<YYINITIAL> "int"                { return symbol(sym.SANNICOLAS); }
+<YYINITIAL> "float"              { return symbol(sym.SINTERKLAAS); }
+<YYINITIAL> "char"               { return symbol(sym.PAPANOEL); }
+<YYINITIAL> "string"             { return symbol(sym.DEDMOROZ); }
 
 <YYINITIAL> {
-    /* identifiers */ 
-    {Identifier}                   { return symbol(sym.IDENTIFIER); }
     
     /* literals */
-    {DecIntegerLiteral}            { return symbol(sym.INTEGER_LITERAL); }
+    {DecIntegerLiteral}            { return symbol(sym.l_SANNICOLAS); }
+    {FloatLiteral}                 { return symbol(sym.l_SINTERKLAAS); }
+    {BooleanLiteralT}              { return symbol(sym.l_tCOLACHO); }
+    {BooleanLiteralF}              { return symbol(sym.l_fCOLACHO); }
+    {CharLiteral}                  { return symbol(sym.l_PAPANOEL); }
     \"                             { string.setLength(0); yybegin(STRING); }
     
 
     /* operators */
+    /* assignment */
+    "<="                           { return symbol(sym.ENTREGA); }
+
     /* binary */
-    "<="                           { return symbol(sym.EQ); }
-    "+"                            { return symbol(sym.PLUS); }
-    "-"                            { return symbol(sym.MINUS); }
-    "**"                           { return symbol(sym.POWER); }
-    "*"                            { return symbol(sym.TIMES); }
-    "/"                            { return symbol(sym.DIVIDE); }
-    "~"                            { return symbol(sym.MOD); }
+    "+"                            { return symbol(sym.RODOLFO); }
+    "-"                            { return symbol(sym.BRIOSO); }
+    "**"                           { return symbol(sym.DANZARIN); }
+    "*"                            { return symbol(sym.BROMISTA); }
+    "/"                            { return symbol(sym.COMETA); }
+    "~"                            { return symbol(sym.CUPIDO); }
 
     /* relational */
-    "<"                            { return symbol(sym.LT); }
-    "<=="                          { return symbol(sym.EQEQ); }
-    ">"                            { return symbol(sym.GT); }
-    ">="                           { return symbol(sym.GTEQ); }
-    "=="                           { return symbol(sym.EQEQ); }
-    "!="                           { return symbol(sym.NOTEQ); }
+    "<"                            { return symbol(sym.CANALLA); }
+    "<=="                          { return symbol(sym.CHISPA); }
+    ">"                            { return symbol(sym.BUFON); }
+    ">="                           { return symbol(sym.ASTUTO); }
+    "=="                           { return symbol(sym.COPODENIEVE); }
+    "!="                           { return symbol(sym.FELICIDAD); }
 
     /* unary */
-    "++"                           { return symbol(sym.INC); }
-    "--"                           { return symbol(sym.DEC); }
+    "++"                           { return symbol(sym.GRINCH); }
+    "--"                           { return symbol(sym.QUIEN); }
 
     /* logical */
-    "^"                            { return symbol(sym.AND); }
-    "#"                            { return symbol(sym.OR); }
-    "!"                            { return symbol(sym.NOT); }
+    "^"                            { return symbol(sym.MELCHOR); }
+    "#"                            { return symbol(sym.GASPAR); }
+    "!"                            { return symbol(sym.BALTASAR); }
+
+    /* expressions */
+    "{"                            { return symbol(sym.ABREREGALO); }
+    "}"                            { return symbol(sym.CIERRAREGALO); }
+    "("                            { return symbol(sym.ABRECUENTO); }
+    ")"                            { return symbol(sym.CIERRACUENTO); }
+    "|"                            { return symbol(sym.FINREGALO); }
+
+    /* control */
+    "if"                           { return symbol(sym.ELFO); }
+    "elif"                         { return symbol(sym.HADA); }
+    "else"                         { return symbol(sym.DUENDE); }
+    "for"                          { return symbol(sym.ENVUELVE); }
+    "do"                           { return symbol(sym.HACE); }
+    "until"                        { return symbol(sym.REVISA); }
+    "return"                       { return symbol(sym.ENVIA); }
+    "break"                        { return symbol(sym.CORTA); }
+
+    /* I/O */
+    "print"                        { return symbol(sym.NARRA); }
+    "read"                         { return symbol(sym.ESCUCHA); }
+
+    /* functions */
+    ","                            { return symbol(sym.ADORNO); }
+
+    /* identifiers */ 
+    {Identifier}                   { return symbol(sym.PERSONA); }
 
     /* comments */
     {Comment}                      { /* ignore */ }
@@ -109,7 +139,7 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 
 <STRING> {
     \"                             { yybegin(YYINITIAL); 
-                                    return symbol(sym.STRING_LITERAL, 
+                                    return symbol(sym.l_DEDMOROZ, 
                                     string.toString()); }
     [^\n\r\"\\]+                   { string.append( yytext() ); }
     \\t                            { string.append('\t'); }

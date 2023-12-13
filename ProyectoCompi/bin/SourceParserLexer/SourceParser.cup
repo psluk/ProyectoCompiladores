@@ -1,0 +1,46 @@
+/* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
+package ParserLexer;
+import java_cup.runtime.*;
+
+parser code {:
+    // Connect this parser to a scanner!
+    Lexer lexer;
+    
+    @SuppressWarnings("deprecation")
+    public parser(Lexer lexer){
+        this.lexer=lexer;
+        this.symbolFactory = new DefaultSymbolFactory();
+    }
+
+:}
+
+/* define how to connect to the scanner! */
+init with {: :};
+scan with {: return lexer.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+
+/* keywords */
+terminal            COLACHO, SANNICOLAS, SINTERKLAAS, PAPANOEL, DEDMOROZ;
+
+/* literals */
+terminal int        l_SANNICOLAS;
+terminal float      l_SINTERKLAAS;
+terminal boolean    l_tCOLACHO;
+terminal boolean    l_fCOLACHO;
+terminal char       l_PAPANOEL;
+terminal String     l_DEDMOROZ;
+
+/* operators */
+
+/* assignment */
+terminal            ENTREGA;
+
+/* binary */
+terminal            RODOLFO, BRIOSO, DANZARIN, BROMISTA, COMETA, CUPIDO;
+
+/* relational */
+terminal            CANALLA, CHISPA, BUFON, ASTUTO, COPODENIEVE, FELICIDAD;
+
+/* unary */
+terminal            GRINCH, QUIEN;

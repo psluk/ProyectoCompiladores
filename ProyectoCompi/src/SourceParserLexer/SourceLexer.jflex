@@ -1,4 +1,5 @@
 /* JFlex example: partial Java language lexer specification */
+package ParserLexer;
 import java_cup.runtime.*;
 
 /**
@@ -43,11 +44,11 @@ HexDigit = [0-9a-fA-F]
     // To use in CharLiteral, for Unicode escape sequences
 
 /* literals */
-DecIntegerLiteral = -? (0 | [1-9][0-9])*
+DecIntegerLiteral = -? (0 | [1-9][0-9]*)
 FloatLiteral      = {DecIntegerLiteral} \. [0-9]+ ([eE] [+-]? [0-9]+)?
     // Similar to DecIntegerLiteral, but with a decimal point and optional exponent
 BooleanLiteralT   = "true"
-BooleanLiteralT   = "false"
+BooleanLiteralF   = "false"
 CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {HexDigit} ) \'
     // The second alternative is for Unicode escape sequences
 
@@ -61,17 +62,14 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 <YYINITIAL> "float"              { return symbol(sym.SINTERKLAAS); }
 <YYINITIAL> "char"               { return symbol(sym.PAPANOEL); }
 <YYINITIAL> "string"             { return symbol(sym.DEDMOROZ); }
-<YYINITIAL> "break"              { return symbol(sym.JOULUPUKKI); }
 
 <YYINITIAL> {
-    /* identifiers */ 
-    {Identifier}                   { return symbol(sym.PERSONA); }
     
     /* literals */
     {DecIntegerLiteral}            { return symbol(sym.l_SANNICOLAS); }
     {FloatLiteral}                 { return symbol(sym.l_SINTERKLAAS); }
-    {BooleanLiteralT}              { return symbol(sym.l_COLACHO); }
-    {BooleanLiteralF}              { return symbol(sym.l_COLACHO); }
+    {BooleanLiteralT}              { return symbol(sym.l_tCOLACHO); }
+    {BooleanLiteralF}              { return symbol(sym.l_fCOLACHO); }
     {CharLiteral}                  { return symbol(sym.l_PAPANOEL); }
     \"                             { string.setLength(0); yybegin(STRING); }
     
@@ -129,6 +127,8 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
     /* functions */
     ","                            { return symbol(sym.ADORNO); }
 
+    /* identifiers */ 
+    {Identifier}                   { return symbol(sym.PERSONA); }
 
     /* comments */
     {Comment}                      { /* ignore */ }
