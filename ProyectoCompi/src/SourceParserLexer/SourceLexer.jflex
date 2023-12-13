@@ -31,11 +31,11 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
 
-TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+TraditionalComment   = "/_" [^_] ~"_/" | "/_" "_"+ "/"
 // Comment can be the last line of the file, without line terminator.
-EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
-DocumentationComment = "/**" {CommentContent} "*"+ "/"
-CommentContent       = ( [^*] | \*+ [^/*] )*
+EndOfLineComment     = "@" {InputCharacter}* {LineTerminator}?
+DocumentationComment = "/__" {CommentContent} "_"+ "/"
+CommentContent       = ( [^_] | \_+ [^/_] )*
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
@@ -104,6 +104,31 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
     "^"                            { return symbol(sym.MELCHOR); }
     "#"                            { return symbol(sym.GASPAR); }
     "!"                            { return symbol(sym.BALTASAR); }
+
+    /* expressions */
+    "{"                            { return symbol(sym.ABREREGALO); }
+    "}"                            { return symbol(sym.CIERRAREGALO); }
+    "("                            { return symbol(sym.ABRECUENTO); }
+    ")"                            { return symbol(sym.CIERRACUENTO); }
+    "|"                            { return symbol(sym.FINREGALO); }
+
+    /* control */
+    "if"                           { return symbol(sym.ELFO); }
+    "elif"                         { return symbol(sym.HADA); }
+    "else"                         { return symbol(sym.DUENDE); }
+    "for"                          { return symbol(sym.ENVUELVE); }
+    "do"                           { return symbol(sym.HACE); }
+    "until"                        { return symbol(sym.REVISA); }
+    "return"                       { return symbol(sym.ENVIA); }
+    "break"                        { return symbol(sym.CORTA); }
+
+    /* I/O */
+    "print"                        { return symbol(sym.NARRA); }
+    "read"                         { return symbol(sym.ESCUCHA); }
+
+    /* functions */
+    ","                            { return symbol(sym.ADORNO); }
+
 
     /* comments */
     {Comment}                      { /* ignore */ }
