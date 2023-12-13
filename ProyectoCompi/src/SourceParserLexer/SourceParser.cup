@@ -8,7 +8,7 @@ parser code {:
     
     @SuppressWarnings("deprecation")
     public parser(Lexer lexer){
-        this.lexer=lexer;
+        this.lexer = lexer;
         this.symbolFactory = new DefaultSymbolFactory();
     }
 
@@ -44,3 +44,39 @@ terminal            CANALLA, CHISPA, BUFON, ASTUTO, COPODENIEVE, FELICIDAD;
 
 /* unary */
 terminal            GRINCH, QUIEN;
+
+/* logical */
+terminal            MELCHOR, GASPAR, BALTASAR;
+
+/* expressions */
+terminal            ABREREGALO, CIERRAREGALO, ABRECUENTO, CIERRACUENTO, FINREGALO;
+
+/* control */
+terminal            ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
+
+/* I/O */
+terminal            NARRA, ESCUCHA;
+
+/* functions */
+terminal            ADORNO;
+
+/* identifiers */
+terminal            PERSONA;
+
+/* Non-terminals (symbols used in the grammar). */
+non terminal        navidad;
+
+/* Start symbol (the symbol the parser will start with). */
+start with          navidad;
+
+navidad ::=         COLACHO | SANNICOLAS | SINTERKLAAS | PAPANOEL | DEDMOROZ |
+                    l_SANNICOLAS | l_SINTERKLAAS | l_tCOLACHO | l_fCOLACHO | l_PAPANOEL | l_DEDMOROZ |
+                    ENTREGA | RODOLFO | BRIOSO | DANZARIN | BROMISTA | COMETA | CUPIDO |
+                    CANALLA | CHISPA | BUFON | ASTUTO | COPODENIEVE | FELICIDAD |
+                    GRINCH | QUIEN |
+                    MELCHOR | GASPAR | BALTASAR |
+                    ABREREGALO | CIERRAREGALO | ABRECUENTO | CIERRACUENTO | FINREGALO |
+                    ELFO | HADA | DUENDE | ENVUELVE | HACE | REVISA | ENVIA | CORTA |
+                    NARRA | ESCUCHA |
+                    ADORNO |
+                    PERSONA;
