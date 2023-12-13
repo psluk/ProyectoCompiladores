@@ -46,7 +46,8 @@ HexDigit = [0-9a-fA-F]
 DecIntegerLiteral = -? (0 | [1-9][0-9])*
 FloatLiteral      = {DecIntegerLiteral} \. [0-9]+ ([eE] [+-]? [0-9]+)?
     // Similar to DecIntegerLiteral, but with a decimal point and optional exponent
-BooleanLiteral    = "true" | "false"
+BooleanLiteralT   = "true"
+BooleanLiteralT   = "false"
 CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {HexDigit} ) \'
     // The second alternative is for Unicode escape sequences
 
@@ -55,50 +56,54 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 %%
 
 /* keywords */
-<YYINITIAL> "abstract"           { return symbol(sym.ABSTRACT); }
-<YYINITIAL> "boolean"            { return symbol(sym.BOOLEAN); }
-<YYINITIAL> "break"              { return symbol(sym.BREAK); }
-<YYINITIAL> "int"                { return symbol(sym.INT); }
-<YYINITIAL> "float"              { return symbol(sym.FLOAT); }
-<YYINITIAL> "boolean"            { return symbol(sym.BOOLEAN); }
-<YYINITIAL> "char"               { return symbol(sym.CHAR); }
-<YYINITIAL> "string"             { return symbol(sym.STRING); }
+<YYINITIAL> "boolean"            { return symbol(sym.COLACHO); }
+<YYINITIAL> "int"                { return symbol(sym.SANNICOLAS); }
+<YYINITIAL> "float"              { return symbol(sym.SINTERKLAAS); }
+<YYINITIAL> "char"               { return symbol(sym.PAPANOEL); }
+<YYINITIAL> "string"             { return symbol(sym.DEDMOROZ); }
+<YYINITIAL> "break"              { return symbol(sym.JOULUPUKKI); }
 
 <YYINITIAL> {
     /* identifiers */ 
-    {Identifier}                   { return symbol(sym.IDENTIFIER); }
+    {Identifier}                   { return symbol(sym.PERSONA); }
     
     /* literals */
-    {DecIntegerLiteral}            { return symbol(sym.INTEGER_LITERAL); }
+    {DecIntegerLiteral}            { return symbol(sym.l_SANNICOLAS); }
+    {FloatLiteral}                 { return symbol(sym.l_SINTERKLAAS); }
+    {BooleanLiteralT}              { return symbol(sym.l_COLACHO); }
+    {BooleanLiteralF}              { return symbol(sym.l_COLACHO); }
+    {CharLiteral}                  { return symbol(sym.l_PAPANOEL); }
     \"                             { string.setLength(0); yybegin(STRING); }
     
 
     /* operators */
+    /* assignment */
+    "<="                           { return symbol(sym.ENTREGA); }
+
     /* binary */
-    "<="                           { return symbol(sym.EQ); }
-    "+"                            { return symbol(sym.PLUS); }
-    "-"                            { return symbol(sym.MINUS); }
-    "**"                           { return symbol(sym.POWER); }
-    "*"                            { return symbol(sym.TIMES); }
-    "/"                            { return symbol(sym.DIVIDE); }
-    "~"                            { return symbol(sym.MOD); }
+    "+"                            { return symbol(sym.RODOLFO); }
+    "-"                            { return symbol(sym.BRIOSO); }
+    "**"                           { return symbol(sym.DANZARIN); }
+    "*"                            { return symbol(sym.BROMISTA); }
+    "/"                            { return symbol(sym.COMETA); }
+    "~"                            { return symbol(sym.CUPIDO); }
 
     /* relational */
-    "<"                            { return symbol(sym.LT); }
-    "<=="                          { return symbol(sym.EQEQ); }
-    ">"                            { return symbol(sym.GT); }
-    ">="                           { return symbol(sym.GTEQ); }
-    "=="                           { return symbol(sym.EQEQ); }
-    "!="                           { return symbol(sym.NOTEQ); }
+    "<"                            { return symbol(sym.CANALLA); }
+    "<=="                          { return symbol(sym.CHISPA); }
+    ">"                            { return symbol(sym.BUFON); }
+    ">="                           { return symbol(sym.ASTUTO); }
+    "=="                           { return symbol(sym.COPODENIEVE); }
+    "!="                           { return symbol(sym.FELICIDAD); }
 
     /* unary */
-    "++"                           { return symbol(sym.INC); }
-    "--"                           { return symbol(sym.DEC); }
+    "++"                           { return symbol(sym.GRINCH); }
+    "--"                           { return symbol(sym.QUIEN); }
 
     /* logical */
-    "^"                            { return symbol(sym.AND); }
-    "#"                            { return symbol(sym.OR); }
-    "!"                            { return symbol(sym.NOT); }
+    "^"                            { return symbol(sym.MELCHOR); }
+    "#"                            { return symbol(sym.GASPAR); }
+    "!"                            { return symbol(sym.BALTASAR); }
 
     /* comments */
     {Comment}                      { /* ignore */ }
@@ -109,7 +114,7 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 
 <STRING> {
     \"                             { yybegin(YYINITIAL); 
-                                    return symbol(sym.STRING_LITERAL, 
+                                    return symbol(sym.l_DEDMOROZ, 
                                     string.toString()); }
     [^\n\r\"\\]+                   { string.append( yytext() ); }
     \\t                            { string.append('\t'); }
