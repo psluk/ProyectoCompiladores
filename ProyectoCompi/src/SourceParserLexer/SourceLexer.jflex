@@ -23,6 +23,14 @@ import java_cup.runtime.*;
     private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline, yycolumn, value);
     }
+
+    public int getLine() {
+        return yyline + 1; // +1 because the line index starts in 0
+    }
+
+    public int getColumn() {
+        return yycolumn + 1; // +1 because the column index starts in 0
+    }
 %}
 
 LineTerminator = \r|\n|\r\n

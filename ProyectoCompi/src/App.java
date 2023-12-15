@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -26,7 +27,19 @@ public class App {
                 Paths.get(basePath + "\\src\\ParserLexer\\" + jlexer));
     }
 
+    public static void runTest() throws IOException{
+        String basePath;
+
+        MainJflexCup mfjc = new MainJflexCup();
+
+        basePath = System.getProperty("user.dir");
+        
+        mfjc.runTest(basePath+"\\src\\SourceParserLexer\\testCode.txt", basePath+"output.txt");
+    }
+
     public static void main(String[] args) throws Exception {
         generateLexerParser();
+        runTest();
+
     }
 }
