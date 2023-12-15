@@ -3,7 +3,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java_cup.Lexer;
 import java_cup.internal_error;
 import java_cup.runtime.Symbol;
 import jflex.exceptions.SilentExit;
@@ -31,6 +30,8 @@ public class MainJflexCup {
         reader.read();
         FileWriter writer = new FileWriter(outputPath);
 
+        // LexerProject writes errors in the same output file, so the constructor
+        // receives the same writer
         LexerProject lexer = new LexerProject(reader, writer);
         int i = 0;
         Symbol token;
@@ -48,6 +49,7 @@ public class MainJflexCup {
 
         }
 
+        // Close the reader and writer
         reader.close();
         writer.close();
     }

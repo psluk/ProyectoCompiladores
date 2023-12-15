@@ -18,7 +18,6 @@ import java.io.IOException;
 
 %{
     StringBuffer string = new StringBuffer();
-    private FileWriter writer;
 
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
@@ -36,6 +35,9 @@ import java.io.IOException;
         return yycolumn + 1; // +1 because the column index starts in 0
     }
 
+    // Adds a writer to write the errors in the output file,
+    // which requires to add another constructor to the lexer
+    private FileWriter writer;
     public LexerProject(java.io.Reader in, FileWriter out) {
         this.zzReader = in;
         this.writer = out;
@@ -170,6 +172,7 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 }
 
 /* error fallback */
+// Writes an error message in the output file
 [^] {
     try {
         writer.write("ERROR: Carácter ilegal <" + yytext() + "> en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1) + "\n");
