@@ -42,16 +42,19 @@ public class MainJflexCup {
                         + "\tNombre: " + sym.terminalNames[token.sym] + "\tValor: "
                         + (token.value == null ? lexer.yytext() : token.value.toString()) + "\n");
             } else {
+                System.out.println("Cantidad de lexemas encontrados: " + i);
                 writer.write("Cantidad de lexemas encontrados: " + i);
                 break;
             }
             i++;
-
         }
 
         // Close the reader and writer
         reader.close();
         writer.close();
+
+        System.out.println("----------------------------------------------------");
+        System.out.println("Archivo generado en: " + outputPath);
     }
 
 }

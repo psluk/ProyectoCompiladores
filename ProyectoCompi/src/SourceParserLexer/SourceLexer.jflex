@@ -175,6 +175,7 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 // Writes an error message in the output file
 [^] {
     try {
+        System.out.println("ERROR: Carácter ilegal <" + yytext() + "> en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1));
         writer.write("ERROR: Carácter ilegal <" + yytext() + "> en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1) + "\n");
     } catch (IOException e) {
         System.out.println("Error al escribir en el archivo de salida: " + e.getMessage());
