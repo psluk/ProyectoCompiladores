@@ -34,8 +34,8 @@ public class App {
 
         basePath = System.getProperty("user.dir");
 
-        mfjc.runTest(basePath + "\\src\\SourceParserLexer\\testCode.txt",
-                basePath + "\\src\\SourceParserLexer\\output.txt");
+        mfjc.runTest(basePath + "\\src\\TestFiles\\testCode.txt",
+                basePath + "\\src\\TestFiles\\output.txt");
     }
 
     public static void main(String[] args) throws Exception {
