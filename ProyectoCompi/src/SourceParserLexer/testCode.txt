@@ -4,8 +4,11 @@
 	read(s1)| @semantico
 	print(b1)| @semantico
 	print(true)| @semantico
-	print(-6.7)|
+	print(-6.)|
+	print(-.1)|
+	print(-2.3)|
 	return 1|
+	' @ Error a propósito
 }
 
 function float miFunc(int dif,char otra){

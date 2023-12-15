@@ -27,19 +27,19 @@ public class App {
                 Paths.get(basePath + "\\src\\ParserLexer\\" + jlexer));
     }
 
-    public static void runTest() throws IOException{
+    public static void runTest() throws IOException {
         String basePath;
 
         MainJflexCup mfjc = new MainJflexCup();
 
         basePath = System.getProperty("user.dir");
-        
-        mfjc.runTest(basePath+"\\src\\SourceParserLexer\\testCode.txt", basePath+"\\src\\SourceParserLexer\\output.txt");
+
+        mfjc.runTest(basePath + "\\src\\SourceParserLexer\\testCode.txt",
+                basePath + "\\src\\SourceParserLexer\\output.txt");
     }
 
     public static void main(String[] args) throws Exception {
         generateLexerParser();
         runTest();
-
     }
 }

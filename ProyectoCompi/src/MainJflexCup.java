@@ -31,15 +31,15 @@ public class MainJflexCup {
         reader.read();
         FileWriter writer = new FileWriter(outputPath);
 
-        LexerProject lexer = new LexerProject(reader);
+        LexerProject lexer = new LexerProject(reader, writer);
         int i = 0;
         Symbol token;
         while (true) {
             token = lexer.next_token();
             if (token.sym != 0) {
-                writer.write("Fila: " + lexer.getLine() + "\tColumna: " + lexer.getColumn()
-                        + "\tToken: " + token.sym + "\tValor: "
-                        + (token.value == null ? lexer.yytext() : token.value.toString())+"\n");
+                writer.write("Línea: " + lexer.getLine() + "\tColumna: " + lexer.getColumn() + "\tToken: " + token.sym
+                        + "\tNombre: " + sym.terminalNames[token.sym] + "\tValor: "
+                        + (token.value == null ? lexer.yytext() : token.value.toString()) + "\n");
             } else {
                 writer.write("Cantidad de lexemas encontrados: " + i);
                 break;

@@ -1,6 +1,8 @@
 /* JFlex example: partial Java language lexer specification */
 package ParserLexer;
 import java_cup.runtime.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
     * This is a JFlex specification for a lexer that recognizes a test language
@@ -16,6 +18,7 @@ import java_cup.runtime.*;
 
 %{
     StringBuffer string = new StringBuffer();
+    private FileWriter writer;
 
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
@@ -31,6 +34,11 @@ import java_cup.runtime.*;
 
     public int getColumn() {
         return yycolumn + 1; // +1 because the column index starts in 0
+    }
+
+    public LexerProject(java.io.Reader in, FileWriter out) {
+        this.zzReader = in;
+        this.writer = out;
     }
 %}
 
@@ -54,7 +62,9 @@ HexDigit = [0-9a-fA-F]
 
 /* literals */
 DecIntegerLiteral = -? (0 | [1-9][0-9]*)
-FloatLiteral      = {DecIntegerLiteral} \. [0-9]+ ([eE] [+-]? [0-9]+)?
+FloatLiteral      = {DecIntegerLiteral}? \. [0-9]+ ([eE] [+-]? [0-9]+)?
+                    | {DecIntegerLiteral} [eE] [+-]? [0-9]+
+                    | {DecIntegerLiteral} \.
     // Similar to DecIntegerLiteral, but with a decimal point and optional exponent
 BooleanLiteralT   = "true"
 BooleanLiteralF   = "false"
@@ -160,5 +170,10 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 }
 
 /* error fallback */
-[^]                              { throw new Error("Illegal character <"+
-                                                    yytext()+">"); }
+[^] {
+    try {
+        writer.write("ERROR: Carácter ilegal <" + yytext() + "> en la línea " + (yyline + 1) + ", columna " + (yycolumn + 1) + "\n");
+    } catch (IOException e) {
+        System.out.println("Error al escribir en el archivo de salida: " + e.getMessage());
+    }
+}
