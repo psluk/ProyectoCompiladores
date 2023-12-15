@@ -88,3 +88,8 @@ nb-configuration.xml
 ## ParserLexer
 ##############################
 ParserLexer/
+
+##############################
+## Output
+##############################
+output.txt

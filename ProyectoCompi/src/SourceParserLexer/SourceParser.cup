@@ -4,10 +4,10 @@ import java_cup.runtime.*;
 
 parser code {:
     // Connect this parser to a scanner!
-    Lexer lexer;
+    LexerProject lexer;
     
     @SuppressWarnings("deprecation")
-    public parser(Lexer lexer){
+    public parser(LexerProject lexer){
         this.lexer = lexer;
         this.symbolFactory = new DefaultSymbolFactory();
     }

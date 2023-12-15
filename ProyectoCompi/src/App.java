@@ -8,7 +8,7 @@ public class App {
         MainJflexCup mfjc = new MainJflexCup();
 
         basePath = System.getProperty("user.dir");
-        jlexer = "Lexer.java";
+        jlexer = "LexerProject.java";
         jparser = "parser.java";
         jlexerFolder = "SourceParserLexer";
 
@@ -34,7 +34,7 @@ public class App {
 
         basePath = System.getProperty("user.dir");
         
-        mfjc.runTest(basePath+"\\src\\SourceParserLexer\\testCode.txt", basePath+"output.txt");
+        mfjc.runTest(basePath+"\\src\\SourceParserLexer\\testCode.txt", basePath+"\\src\\SourceParserLexer\\output.txt");
     }
 
     public static void main(String[] args) throws Exception {
