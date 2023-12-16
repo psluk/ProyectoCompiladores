@@ -20,11 +20,14 @@ public class MainJflexCup {
         java_cup.Main.main(strArr);
     }
 
+    // This function calls the methods to generate the parser and the lexer
     public void generateParserLexer(String lexerPath, String parserPath) throws Exception {
         generateLexer(lexerPath);
         generateParser(parserPath);
     }
 
+    // This function reads a file and generates an output file
+    // after an lexic analysis
     public void runTest(String inputPath, String outputPath) throws IOException {
         Reader reader = new BufferedReader(new FileReader(inputPath));
         reader.read();
@@ -38,6 +41,8 @@ public class MainJflexCup {
         while (true) {
             token = lexer.next_token(); // It gets the next token of the input
             if (token.sym != 0) {
+                // If the condition is valid, all the necessary data
+                // gets written in a new file.
                 writer.write("Línea: " + lexer.getLine() + "\tColumna: " + lexer.getColumn() + "\tToken: " + token.sym
                         + "\tNombre: " + sym.terminalNames[token.sym] + "\tValor: "
                         + (token.value == null ? lexer.yytext() : token.value.toString()) + "\n");
