@@ -36,7 +36,7 @@ public class MainJflexCup {
         int i = 0;
         Symbol token;
         while (true) {
-            token = lexer.next_token();
+            token = lexer.next_token(); // It gets the next token of the input
             if (token.sym != 0) {
                 writer.write("Línea: " + lexer.getLine() + "\tColumna: " + lexer.getColumn() + "\tToken: " + token.sym
                         + "\tNombre: " + sym.terminalNames[token.sym] + "\tValor: "
