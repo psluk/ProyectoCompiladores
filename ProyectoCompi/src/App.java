@@ -14,6 +14,11 @@ public class App {
         jparser = "parser.java";
         jlexerFolder = "SourceParserLexer";
 
+        // Creates the ParserLexer folder if it doesn't exist
+        if (!Files.exists(Paths.get(basePath + "\\src\\ParserLexer"))) {
+            Files.createDirectory(Paths.get(basePath + "\\src\\ParserLexer"));
+        }
+
         // If the files already exist, they get deleted
         Files.deleteIfExists(Paths.get(basePath + "\\src\\ParserLexer\\" + jlexer));
         Files.deleteIfExists(Paths.get(basePath + "\\src\\ParserLexer\\" + jparser));
@@ -51,7 +56,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         // For a better performance, run first generateLexerParser()
-        // and then runtTest()
+        // and then runTest()
         generateLexerParser();
         runTest();
     }
