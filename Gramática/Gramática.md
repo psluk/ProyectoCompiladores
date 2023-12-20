@@ -60,7 +60,7 @@ entregaTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ENTREGA l_
 
 // (a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro
 //function int persona (parametros){bloque de codigo}
-bolsanavideña ::= 
+bolsanavideña ::= tsantaclaus PERSONA
 
 // (e) combinar -> primero definir funciones
 
