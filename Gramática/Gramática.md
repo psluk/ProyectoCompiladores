@@ -7,15 +7,42 @@
 - `CANALLA`, `CHISPA`, `BUFON`, `ASTUTO`, `COPODENIEVE`, `FELICIDAD`
 - `GRINCH`, `QUIEN`
 - `MELCHOR`, `GASPAR`, `BALTASAR`
-- `ABREREGALO`, `CIERRAREGALO`, `ABRECUENTO`, `CIERRACUENTO`, `FINREGALO`
+- `ABREREGALO`, `CIERRAREGALO`, `ABRECUENTO`, `CIERRACUENTO`, `FINREGALO`, `ABREEMPAQUE`, `CIERRAEMPAQUE`
 - `ELFO`, `HADA`, `DUENDE`, `ENVUELVE`, `HACE`, `REVISA`, `ENVIA`, `CORTA`
 - `NARRA`, `ESCUCHA`
 - `ADORNO`
 - `PERSONA`
+- `BOLSA`
+- `CHIMENEA`
+- `COLACHO`, `SANNICOLAS`, `SINTERKLAAS`, `PAPANOEL`, `DEDMOROZ`
+- `l_SANNICOLAS`, `l_SINTERKLAAS`, `l_tCOLACHO`, `l_fCOLACHO`, `l_PAPANOEL`, `l_DEDMOROZ`
 
 ## Listado de no terminales
 
 - `navidad`
+- `rutaNavideña`
+- `rutaNavideñaAux`
+- `tSantaClaus`
+- `tlSantaClaus`
+- `tlSantaClausNumero`
+- `creaRegalo`
+- `creaEntregaRegalo`
+- `entregaRegalo`
+- `trineoSanta`
+- `paqueteTrineoSanta`
+- `entregaTrineoSanta`
+- `confites`
+- `bolsaNavideña`
+- `regaloPrin`
+- `regaloVolador`
+- `regaloCompartido`
+- `regaloMultiplicado`
+- `regaloAgregado`
+- `personaAdornada`
+- `regaloComprado`
+- `regaloManual`
+- `llamadaNavideña`
+- `caminoNavideño`
 
 ## Símbolo inicial
 
@@ -23,10 +50,20 @@
 
 ## Listado de producciones
 
-_`tsantaclaus` = tipo de santa = tipos_
+- _`rutaNavideña` = bloque de código_    
+_(`rutaNavideñaAux` permite un bloque vacío)_
 
 ```
-tsantaclaus ::= 
+rutaNavideña ::= ABREREGALO lineasNavidad CIERRAREGALO ;
+
+rutaNavideñaAux ::=  rutaNavideña |
+               ABREREGALO CIERRAREGALO ;
+```
+
+- _`tSantaClaus` = tipo de santa = tipos_
+
+```
+tSantaClaus ::= 
             COLACHO |
             SANNICOLAS |
             SINTERKLAAS |
@@ -34,10 +71,10 @@ tsantaclaus ::=
             DEDMOROZ ;
 ```
 
-_`tlsanta` = tipo de literal (b)_
+- _`tlSantaClaus` = tipo de literal (b)_
 
 ```
-tlsantaclaus ::= 
+tlSantaClaus ::= 
             l_SANNICOLAS |
             l_SINTERKLAAS |
             l_tCOLACHO |
@@ -46,74 +83,105 @@ tlsantaclaus ::=
             l_DEDMOROZ ;
 ```
 
-_`creaRegalo` = variables (b), (d)_
+- _`creaRegalo` = variables (b), (d)_
 
 ```
-creaRegalo :: = tsantaclaus PERSONA FINREGALO ;
+creaRegalo :: = tSantaClaus PERSONA FINREGALO ;
 ```
 
-_`creaEntregaRegalo` = asignar variable (d)_
+- _`creaEntregaRegalo` = asignar variable (d)_
 
 ```
-creaEntregaRegalo :: = tsantaclaus PERSONA ENTREGA tlsantaclaus FINREGALO ;
-entregaRegalo ::= PERSONA ENTREGA tlsantaclaus FINREGALO ;
+creaEntregaRegalo :: = tSantaClaus PERSONA ENTREGA regaloPrin FINREGALO ;
+creaEntregaRegalo :: = tSantaClaus PERSONA ENTREGA regaloManual FINREGALO ;
+
+entregaRegalo ::= PERSONA ENTREGA regaloPrin FINREGALO ;
+entregaRegalo ::= PERSONA ENTREGA regaloManual FINREGALO ;
 ```
 
-_`ptrineosanta` = arreglo estático (b)_
+- _`trineoSanta` = arreglo estático (c)_
 
 ```
-ptrineosanta ::= tsantaclaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+trineoSanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
+                   PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
 ```
 
-_`arreglo` punto (c)_
+- _`paqueteTrineoSanta` = lee un elemento del arreglo_
 
 ```
-ptTrineosanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
-                   PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;       
+paqueteTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
 ```
 
-_`AAA[0] <= 1 |` → asignar valor al arreglo estático_
+- _`entregaTrineoSanta`: `AAA[0] <= 1 |` → asignar valor al arreglo estático_
 
 ```
-entregaTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ENTREGA l_SANNICOLAS FINREGALO;
+entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus FINREGALO ;
 ```
 
-_(a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro_  
-_function int persona (parametros){bloque de codigo}_
+- _(a) funciones  -> function int persona (parametros){bloque de codigo}_
 
 ```
-bolsanavideña ::= 
+confites ::= confites ADORNO tSantaClaus PERSONA |
+             tSantaClaus PERSONA ;
+
+bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO REGALO |
+                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO REGALO ;
 ```
 
-_(e) combinar -> primero definir funciones_
-
-_(f)_
-
-_(g)_
-
-_(h)_
+- _(e, f, g) expresiones y combinación de ellas, respetando precedencia_
+    - _Se crean cuatro niveles, tal que no se pueda volver de una operación de mayor precedencia a una de menor precedencia: 1: `**`, 2: `~`, 3: `*` o `/`, 4: `+` o `-`_
 
 ```
-operacion: entero op1 entero |    
-           entero op2 entero ;
+regaloPrin ::= regaloAgregado ;
+
+regaloAgregado ::= regaloAgregado RODOLFO regaloMultiplicado |
+                   regaloAgregado BRIOSO regaloMultiplicado  |
+                   regaloAgregado ::= regaloMultiplicado ;
+
+regaloMultiplicado ::= regaloMultiplicado BROMISTA regaloCompartido |
+                       regaloMultiplicado COMETA regaloCompartido |
+                       regaloCompartido ;
+
+regaloCompartido ::= regaloCompartido CUPIDO regaloVolador |
+                     regaloVolador ;
+
+regaloVolador ::= regaloVolador DANZARIN confite |
+                  confite ;
+
+confite ::= ABRECUENTO regaloAgregado CIERRACUENTO |
+            PERSONA |
+            personaAdornada |
+            tl_SantaClaus | llamadaNavideña ;
 ```
 
-_`+` y `-`_
+- _(h) Operaciones unarias (el negativo lo detecta el lexer)_
 
 ```
-op1 ::= RODOLFO|
-        BRIOSO
+personaAdornada ::= GRINCH PERSONA |
+                    QUIEN PERSONA ;
 ```
 
-_`*` y `/`_
+- _(i) Expresiones relacionales (sobre enteros y flotantes)_
 
 ```
-op2 ::= BROMISTA |
-        COMETA ;
+regaloComprado ::= regaloPrin CANALLA regaloPrin |
+                   regaloPrin CHISPA regaloPrin |
+                   regaloPrin BUFON regaloPrin |
+                   regaloPrin ASTUTO regaloPrin |
+                   regaloPrin COPODENIEVE regaloPrin |
+                   regaloPrin FELICIDAD regaloPrin |
+                   l_tCOLACHO | l_fCOLACHO | llamadaNavideña ;
 ```
 
-_producción inicial -> la dejé abajo pero tengo que subirla_
+- _(j) Expresiones lógicas_
 
 ```
-navidad ::=
+regaloManual ::= regaloManual MELCHOR regaloManual |
+                 regaloManual GASPAR regaloManual |
+                 BALTASAR regaloManual |
+                 regaloComprado ;
 ```
+
+- _(m) Estructuras de control_
+
+- _(n) Entrada y salida_
