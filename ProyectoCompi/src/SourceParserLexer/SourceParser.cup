@@ -23,6 +23,9 @@ scan with {: return lexer.next_token(); :};
 /* keywords */
 terminal            COLACHO, SANNICOLAS, SINTERKLAAS, PAPANOEL, DEDMOROZ;
 
+/* function keywords */
+terminal            BOLSA, CHIMENEA;
+
 /* literals */
 terminal int        l_SANNICOLAS;
 terminal float      l_SINTERKLAAS;

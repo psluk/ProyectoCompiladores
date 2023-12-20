@@ -84,6 +84,10 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 <YYINITIAL> "char"               { return symbol(sym.PAPANOEL); }
 <YYINITIAL> "string"             { return symbol(sym.DEDMOROZ); }
 
+/* function keywords */
+<YYINITIAL> "function"           { return symbol(sym.BOLSA); }
+<YYINITIAL> "local"              { return symbol(sym.CHIMENEA); }
+
 <YYINITIAL> {
     
     /* literals */
