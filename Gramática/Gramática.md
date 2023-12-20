@@ -29,7 +29,7 @@ tsantaclaus ::=
             SANNICOLAS |
             SINTERKLAAS |
             PAPANOEL |
-            DEDMOROZ ;   //No sé si debe terminar con ;
+            DEDMOROZ ;  
 
 // tlsanta = tipo de literal (b)
 tlsantaclaus ::= 
@@ -40,22 +40,25 @@ tlsantaclaus ::=
             l_PAPANOEL |
             l_DEDMOROZ ;
 
-// creaRegalo = variables (b) también d?
-creaRegalo :: = tlsantaclaus PERSONA FINREGALO ;
+// creaRegalo = variables (b), (d)
+creaRegalo :: = tsantaclaus PERSONA FINREGALO ;
 
-// creaEntregaRegalo = asignar variable también d?
-creaEntregaRegalo :: = tlsantaclaus PERSONA ENTREGA tlsantaclaus FINREGALO ;
+// creaEntregaRegalo = asignar variable (d)
+creaEntregaRegalo :: = tsantaclaus PERSONA ENTREGA tlsantaclaus FINREGALO ;
 
-// b y c mencionan arreglos, no me queda claro si solo es para int y char
+entregaRegalo ::= PERSONA ENTREGA tlsantaclaus FINREGALO ;
+
 // ptrineosanta = arreglo estático (b)   
-ptrineosanta ::= tlsantaclaus PERSONA DecIntegerLiteral FINREGALO   // no estoy seguro si tiene sentido
-                                                                    // ¿se entiende DecIntegerLiteral?
+ptrineosanta ::= tsantaclaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
 
- // arreglo (c) le puse casi el mismo nombre porque creo que solo debe haber 1                                                                   
- ptTrineosanta ::= l_SANNICOLAS PERSONA DecIntegerLiteral FINREGALO |
-                   l_SANNICOLAS PERSONA DecIntegerLitera FINREGALO                                                        
+// AAA[0] <= 1 |
+
+ // arreglo punto(c)                                                                     
+ ptTrineosanta ::= SANNICOLAS PERSONA l_SANNICOLAS  FINREGALO |
+                   PAPANOEL PERSONA l_SANNICOLAS FINREGALO ;                                                        
 
 // (a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro
+//function int persona (parametros){bloque de codigo}
 bolsanavideña ::= 
 
 // (e) combinar -> primero definir funciones
@@ -80,7 +83,5 @@ OperacionFloat::= float op2 flota |
                   flota op1 float
 
 
-// gramatica inicial
-navidad
-
-function int persona (parametros){bloque de codigo}
+// producción inicial -> la dejé abajo pero tengo que subirla
+navidad ::=
