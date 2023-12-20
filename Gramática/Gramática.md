@@ -51,11 +51,12 @@ entregaRegalo ::= PERSONA ENTREGA tlsantaclaus FINREGALO ;
 // ptrineosanta = arreglo estático (b)   
 ptrineosanta ::= tsantaclaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
 
-// AAA[0] <= 1 |
+// arreglo punto(c)                                                                     
+ ptTrineosanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
+                   PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;       
 
- // arreglo punto(c)                                                                     
- ptTrineosanta ::= SANNICOLAS PERSONA l_SANNICOLAS  FINREGALO |
-                   PAPANOEL PERSONA l_SANNICOLAS FINREGALO ;                                                        
+// AAA[0] <= 1 | -> asignar valor al arreglo estático
+entregaTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ENTREGA l_SANNICOLAS FINREGALO;
 
 // (a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro
 //function int persona (parametros){bloque de codigo}
