@@ -2,36 +2,41 @@
 
 ## Listado de terminales
 
-- ENTREGA
-- RODOLFO, BRIOSO, DANZARIN, BROMISTA, COMETA, CUPIDO
-- CANALLA, CHISPA, BUFON, ASTUTO, COPODENIEVE, FELICIDAD
-- GRINCH, QUIEN
-- MELCHOR, GASPAR, BALTASAR
-- ABREREGALO, CIERRAREGALO, ABRECUENTO, CIERRACUENTO, FINREGALO
-- ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA
-- NARRA, ESCUCHA
-- ADORNO
-- PERSONA
+- `ENTREGA`
+- `RODOLFO`, `BRIOSO`, `DANZARIN`, `BROMISTA`, `COMETA`, `CUPIDO`
+- `CANALLA`, `CHISPA`, `BUFON`, `ASTUTO`, `COPODENIEVE`, `FELICIDAD`
+- `GRINCH`, `QUIEN`
+- `MELCHOR`, `GASPAR`, `BALTASAR`
+- `ABREREGALO`, `CIERRAREGALO`, `ABRECUENTO`, `CIERRACUENTO`, `FINREGALO`
+- `ELFO`, `HADA`, `DUENDE`, `ENVUELVE`, `HACE`, `REVISA`, `ENVIA`, `CORTA`
+- `NARRA`, `ESCUCHA`
+- `ADORNO`
+- `PERSONA`
 
 ## Listado de no terminales
 
-- navidad
+- `navidad`
 
 ## Símbolo inicial
 
-- navidad
+- `navidad`
 
 ## Listado de producciones
 
-// tsantaclaus = tipo de santa = tipos
+_`tsantaclaus` = tipo de santa = tipos_
+
+```
 tsantaclaus ::= 
             COLACHO |
             SANNICOLAS |
             SINTERKLAAS |
             PAPANOEL |
-            DEDMOROZ ;  
+            DEDMOROZ ;
+```
 
-// tlsanta = tipo de literal (b)
+_`tlsanta` = tipo de literal (b)_
+
+```
 tlsantaclaus ::= 
             l_SANNICOLAS |
             l_SINTERKLAAS |
@@ -39,50 +44,76 @@ tlsantaclaus ::=
             l_fCOLACHO |
             l_PAPANOEL |
             l_DEDMOROZ ;
+```
 
-// creaRegalo = variables (b), (d)
+_`creaRegalo` = variables (b), (d)_
+
+```
 creaRegalo :: = tsantaclaus PERSONA FINREGALO ;
+```
 
-// creaEntregaRegalo = asignar variable (d)
+_`creaEntregaRegalo` = asignar variable (d)_
+
+```
 creaEntregaRegalo :: = tsantaclaus PERSONA ENTREGA tlsantaclaus FINREGALO ;
-
 entregaRegalo ::= PERSONA ENTREGA tlsantaclaus FINREGALO ;
+```
 
-// ptrineosanta = arreglo estático (b)   
+_`ptrineosanta` = arreglo estático (b)_
+
+```
 ptrineosanta ::= tsantaclaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+```
 
-// arreglo punto(c)                                                                     
- ptTrineosanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
+_`arreglo` punto (c)_
+
+```
+ptTrineosanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
                    PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;       
+```
 
-// AAA[0] <= 1 | -> asignar valor al arreglo estático
+_`AAA[0] <= 1 |` → asignar valor al arreglo estático_
+
+```
 entregaTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ENTREGA l_SANNICOLAS FINREGALO;
+```
 
-// (a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro
-//function int persona (parametros){bloque de codigo}
+_(a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro_  
+_function int persona (parametros){bloque de codigo}_
+
+```
 bolsanavideña ::= 
+```
 
-// (e) combinar -> primero definir funciones
+_(e) combinar -> primero definir funciones_
 
-// (f)
+_(f)_
 
-// (g)
+_(g)_
 
-// (h)
+_(h)_
 
-OperacionEntero: entero op1 entero |    
-                 entero op2 entero 
-// + y -
+```
+operacion: entero op1 entero |    
+           entero op2 entero ;
+```
+
+_`+` y `-`_
+
+```
 op1 ::= RODOLFO|
         BRIOSO
+```
 
-// * y /
+_`*` y `/`_
+
+```
 op2 ::= BROMISTA |
-        COMETA 
+        COMETA ;
+```
 
-OperacionFloat::= float op2 flota |
-                  flota op1 float
+_producción inicial -> la dejé abajo pero tengo que subirla_
 
-
-// producción inicial -> la dejé abajo pero tengo que subirla
+```
 navidad ::=
+```
