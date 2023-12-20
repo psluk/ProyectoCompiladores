@@ -43,6 +43,22 @@
 - `regaloManual`
 - `llamadaNavideña`
 - `caminoNavideño`
+- `galletaControl`
+- `galletaRegalo`
+- `galletaNavidad`
+- `galletaChocolate`
+- `chocolate`
+- `cacao`
+- `narracuento`
+- `escuchacuento`
+- `gengibre`
+- `regalos`
+- `nueces`
+- `mezcla`
+- `nuezTostada`
+- `regresaFiesta`
+- `terminaFiesta`
+- `leche`
 
 ## Símbolo inicial
 
@@ -185,30 +201,50 @@ regaloManual ::= regaloManual MELCHOR regaloManual |
 - _(m) Estructuras de control (if-[elif]-[else]) -> if(a > b){print{a}}_
 
 ```
+gengibre ::= regalos |
+             gengibre regalos ;
+
+regalos ::= crearRegalo | creaEntregaRegalo | entregaRegalo | mezcla | nueces | regresaFiesta
+
+mezcla ::= galletaControl |
+           chocolate
+
+nueces ::= nuezTostada FINREGALO ;
+
+nuezTostada ::= regaloComprado |
+                regaloManual
+
 galletaControl ::= galletaRegalo |
                    galletaNavidad |
                    galletaChocolate ;
 
-galletaRegalo ::= ELFO ABRECUENTO "condicion" CIERRACUENTO ABREREGALO "contenido" CIERRAREGALO ;
+galletaRegalo ::= ELFO ABRECUENTO nuezTostada CIERRACUENTO ABREREGALO gengibre CIERRAREGALO ;
 
-galletaNavidad ::= HADA ABRECUENTO "condicion" CIERRACUENTO ABREREGALO "contenido" CIERRAREGALO ;
+galletaNavidad ::= HADA ABRECUENTO nuezTostada CIERRACUENTO ABREREGALO gengibre CIERRAREGALO ;
 
-galletaChocolate ::= DUENDE ABREREGALO "contenido" CIERRAREGALO ;
+galletaChocolate ::= DUENDE ABREREGALO nuezTostada CIERRAREGALO ;
 
 ```
 
 _(m) do-until y for. retun, break -> do{algo}whhile(a != 0) o for(i+10,3*2,2+1){}_
 
 ```
-chocolate ::= ENVUELVE ABRECUENTO cacao CIERRACUENTO 
+chocolate ::= ENVUELVE ABRECUENTO cacao CIERRACUENTO ABREREGALO gengibre CIERRAREGALO
 
 cacao ::= l_SANNICOLAS |
           l_SANNICOLAS ADORNO l_SANNICOLAS |
           l_SANNICOLAS ADORNO l_SANNICOLAS ADORNO l_SANNICOLAS ;
 
+regresaFiesta ::= ENVIA FINREGALO |
+                  ENVIA ADORNO regalos FINREGALO ;
+ 
+terminaFiesta ::= CORTA FINREGALO ;
+
+leche ::= HACE ABREREGALO gengibre CIERRAREGALO REVISA ABRECUENTO nuezTostada CIERRACUENTO ;
+
 ```
 
-- _(n) Entrada y salida -> print y read -> print("hola" o print("adios")) ¿read recibe variables?_
+- _(n) Entrada y salida -> print y read -> print("hola" o print("adios"))_
 
 ```
 narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
