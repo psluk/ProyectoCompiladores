@@ -2,87 +2,186 @@
 
 ## Listado de terminales
 
-- ENTREGA
-- RODOLFO, BRIOSO, DANZARIN, BROMISTA, COMETA, CUPIDO
-- CANALLA, CHISPA, BUFON, ASTUTO, COPODENIEVE, FELICIDAD
-- GRINCH, QUIEN
-- MELCHOR, GASPAR, BALTASAR
-- ABREREGALO, CIERRAREGALO, ABRECUENTO, CIERRACUENTO, FINREGALO
-- ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA
-- NARRA, ESCUCHA
-- ADORNO
-- PERSONA
+- `ENTREGA`
+- `RODOLFO`, `BRIOSO`, `DANZARIN`, `BROMISTA`, `COMETA`, `CUPIDO`
+- `CANALLA`, `CHISPA`, `BUFON`, `ASTUTO`, `COPODENIEVE`, `FELICIDAD`
+- `GRINCH`, `QUIEN`
+- `MELCHOR`, `GASPAR`, `BALTASAR`
+- `ABREREGALO`, `CIERRAREGALO`, `ABRECUENTO`, `CIERRACUENTO`, `FINREGALO`, `ABREEMPAQUE`, `CIERRAEMPAQUE`
+- `ELFO`, `HADA`, `DUENDE`, `ENVUELVE`, `HACE`, `REVISA`, `ENVIA`, `CORTA`
+- `NARRA`, `ESCUCHA`
+- `ADORNO`
+- `PERSONA`
+- `BOLSA`
+- `CHIMENEA`
+- `COLACHO`, `SANNICOLAS`, `SINTERKLAAS`, `PAPANOEL`, `DEDMOROZ`
+- `l_SANNICOLAS`, `l_SINTERKLAAS`, `l_tCOLACHO`, `l_fCOLACHO`, `l_PAPANOEL`, `l_DEDMOROZ`
 
 ## Listado de no terminales
 
-- navidad
+- `navidad`
+- `rutaNavideña`
+- `rutaNavideñaAux`
+- `tSantaClaus`
+- `tlSantaClaus`
+- `tlSantaClausNumero`
+- `creaRegalo`
+- `creaEntregaRegalo`
+- `entregaRegalo`
+- `trineoSanta`
+- `paqueteTrineoSanta`
+- `entregaTrineoSanta`
+- `confites`
+- `bolsaNavideña`
+- `regaloPrin`
+- `regaloVolador`
+- `regaloCompartido`
+- `regaloMultiplicado`
+- `regaloAgregado`
+- `personaAdornada`
+- `regaloComprado`
+- `regaloManual`
+- `llamadaNavideña`
+- `caminoNavideño`
 
 ## Símbolo inicial
 
-- navidad
+- `navidad`
 
 ## Listado de producciones
 
-// tsantaclaus = tipo de santa = tipos
-tsantaclaus ::= 
+- _`rutaNavideña` = bloque de código_    
+_(`rutaNavideñaAux` permite un bloque vacío)_
+
+```
+rutaNavideña ::= ABREREGALO lineasNavidad CIERRAREGALO ;
+
+rutaNavideñaAux ::=  rutaNavideña |
+               ABREREGALO CIERRAREGALO ;
+```
+
+- _`tSantaClaus` = tipo de santa = tipos_
+
+```
+tSantaClaus ::= 
             COLACHO |
             SANNICOLAS |
             SINTERKLAAS |
             PAPANOEL |
-            DEDMOROZ ;  
+            DEDMOROZ ;
+```
 
-// tlsanta = tipo de literal (b)
-tlsantaclaus ::= 
+- _`tlSantaClaus` = tipo de literal (b)_
+
+```
+tlSantaClaus ::= 
             l_SANNICOLAS |
             l_SINTERKLAAS |
             l_tCOLACHO |
             l_fCOLACHO |
             l_PAPANOEL |
             l_DEDMOROZ ;
+```
 
-// creaRegalo = variables (b), (d)
-creaRegalo :: = tsantaclaus PERSONA FINREGALO ;
+- _`creaRegalo` = variables (b), (d)_
 
-// creaEntregaRegalo = asignar variable (d)
-creaEntregaRegalo :: = tsantaclaus PERSONA ENTREGA tlsantaclaus FINREGALO ;
+```
+creaRegalo :: = tSantaClaus PERSONA FINREGALO ;
+```
 
-entregaRegalo ::= PERSONA ENTREGA tlsantaclaus FINREGALO ;
+- _`creaEntregaRegalo` = asignar variable (d)_
 
-// ptrineosanta = arreglo estático (b)   
-ptrineosanta ::= tsantaclaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+```
+creaEntregaRegalo :: = tSantaClaus PERSONA ENTREGA regaloPrin FINREGALO ;
+creaEntregaRegalo :: = tSantaClaus PERSONA ENTREGA regaloManual FINREGALO ;
 
-// arreglo punto(c)                                                                     
- ptTrineosanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
-                   PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;       
+entregaRegalo ::= PERSONA ENTREGA regaloPrin FINREGALO ;
+entregaRegalo ::= PERSONA ENTREGA regaloManual FINREGALO ;
+```
 
-// AAA[0] <= 1 | -> asignar valor al arreglo estático
-entregaTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ENTREGA l_SANNICOLAS FINREGALO;
+- _`trineoSanta` = arreglo estático (c)_
 
-// (a) funciones  -> creo que mejor dejarla para despues de definir lo que lleva dentro
-//function int persona (parametros){bloque de codigo}
-bolsanavideña ::= tsantaclaus PERSONA
+```
+trineoSanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
+                   PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+```
 
-// (e) combinar -> primero definir funciones
+- _`paqueteTrineoSanta` = lee un elemento del arreglo_
 
-// (f)
+```
+paqueteTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
+```
 
-// (g)
+- _`entregaTrineoSanta`: `AAA[0] <= 1 |` → asignar valor al arreglo estático_
 
-// (h)
+```
+entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus FINREGALO ;
+```
 
-OperacionEntero: entero op1 entero |    
-                 entero op2 entero 
-// + y -
-op1 ::= RODOLFO|
-        BRIOSO
+- _(a) funciones  -> function int persona (parametros){bloque de codigo}_
 
-// * y /
-op2 ::= BROMISTA |
-        COMETA 
+```
+confites ::= confites ADORNO tSantaClaus PERSONA |
+             tSantaClaus PERSONA ;
 
-OperacionFloat::= float op2 flota |
-                  flota op1 float
+bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO REGALO |
+                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO REGALO ;
+```
 
+- _(e, f, g) expresiones y combinación de ellas, respetando precedencia_
+    - _Se crean cuatro niveles, tal que no se pueda volver de una operación de mayor precedencia a una de menor precedencia: 1: `**`, 2: `~`, 3: `*` o `/`, 4: `+` o `-`_
 
-// producción inicial -> la dejé abajo pero tengo que subirla
-navidad ::=
+```
+regaloPrin ::= regaloAgregado ;
+
+regaloAgregado ::= regaloAgregado RODOLFO regaloMultiplicado |
+                   regaloAgregado BRIOSO regaloMultiplicado  |
+                   regaloAgregado ::= regaloMultiplicado ;
+
+regaloMultiplicado ::= regaloMultiplicado BROMISTA regaloCompartido |
+                       regaloMultiplicado COMETA regaloCompartido |
+                       regaloCompartido ;
+
+regaloCompartido ::= regaloCompartido CUPIDO regaloVolador |
+                     regaloVolador ;
+
+regaloVolador ::= regaloVolador DANZARIN confite |
+                  confite ;
+
+confite ::= ABRECUENTO regaloAgregado CIERRACUENTO |
+            PERSONA |
+            personaAdornada |
+            tl_SantaClaus | llamadaNavideña ;
+```
+
+- _(h) Operaciones unarias (el negativo lo detecta el lexer)_
+
+```
+personaAdornada ::= GRINCH PERSONA |
+                    QUIEN PERSONA ;
+```
+
+- _(i) Expresiones relacionales (sobre enteros y flotantes)_
+
+```
+regaloComprado ::= regaloPrin CANALLA regaloPrin |
+                   regaloPrin CHISPA regaloPrin |
+                   regaloPrin BUFON regaloPrin |
+                   regaloPrin ASTUTO regaloPrin |
+                   regaloPrin COPODENIEVE regaloPrin |
+                   regaloPrin FELICIDAD regaloPrin |
+                   l_tCOLACHO | l_fCOLACHO | llamadaNavideña ;
+```
+
+- _(j) Expresiones lógicas_
+
+```
+regaloManual ::= regaloManual MELCHOR regaloManual |
+                 regaloManual GASPAR regaloManual |
+                 BALTASAR regaloManual |
+                 regaloComprado ;
+```
+
+- _(m) Estructuras de control_
+
+- _(n) Entrada y salida_
