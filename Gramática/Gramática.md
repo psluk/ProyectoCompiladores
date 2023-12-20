@@ -182,6 +182,42 @@ regaloManual ::= regaloManual MELCHOR regaloManual |
                  regaloComprado ;
 ```
 
-- _(m) Estructuras de control_
+- _(m) Estructuras de control (if-[elif]-[else]) -> if(a > b){print{a}}_
 
-- _(n) Entrada y salida_
+```
+galletaControl ::= galletaRegalo |
+                   galletaNavidad |
+                   galletaChocolate ;
+
+galletaRegalo ::= ELFO ABRECUENTO "condicion" CIERRACUENTO ABREREGALO "contenido" CIERRAREGALO ;
+
+galletaNavidad ::= HADA ABRECUENTO "condicion" CIERRACUENTO ABREREGALO "contenido" CIERRAREGALO ;
+
+galletaChocolate ::= DUENDE ABREREGALO "contenido" CIERRAREGALO ;
+
+```
+
+_(m) do-until y for. retun, break -> do{algo}whhile(a != 0) o for(i+10,3*2,2+1){}_
+
+```
+chocolate ::= ENVUELVE ABRECUENTO cacao CIERRACUENTO 
+
+cacao ::= l_SANNICOLAS |
+          l_SANNICOLAS ADORNO l_SANNICOLAS |
+          l_SANNICOLAS ADORNO l_SANNICOLAS ADORNO l_SANNICOLAS ;
+
+```
+
+- _(n) Entrada y salida -> print y read -> print("hola" o print("adios")) ¿read recibe variables?_
+
+```
+narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO l_PAPANOEL CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO PERSONA CIERRACUENTO FINREGALO ;
+
+escuchaCuento ::= ESCUCHA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
+                  ESCUCHA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO ;
+
+```
