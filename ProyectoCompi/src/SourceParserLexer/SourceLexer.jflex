@@ -55,7 +55,7 @@ TraditionalComment   = "/_" [^_] ~"_/" | "/_" "_"+ "/"
 // Comment can be the last line of the file, without line terminator.
 EndOfLineComment     = "@" {InputCharacter}* {LineTerminator}?
 DocumentationComment = "/__" {CommentContent} "_"+ "/"
-CommentContent       = ( [^_] | \_+ [^/_] )*
+CommentContent       = ( [^_] | _+ [^/_] )*
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
@@ -130,6 +130,8 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
     "("                            { return symbol(sym.ABRECUENTO); }
     ")"                            { return symbol(sym.CIERRACUENTO); }
     "|"                            { return symbol(sym.FINREGALO); }
+    "["                            { return symbol(sym.ABREEMPAQUE); }
+    "]"                            { return symbol(sym.CIERRAEMPAQUE); }
 
     /* control */
     "if"                           { return symbol(sym.ELFO); }
