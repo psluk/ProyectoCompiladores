@@ -203,32 +203,49 @@ regaloManual ::= regaloManual MELCHOR regaloManual |
 
 - _(m) Estructuras de control (if-[elif]-[else]) -> if(a > b){print{a}}_
 
+> `gengibre` sería `bloque` en el código del profe
+
 ```
-// gengibre sería bloque en el código del profe
 gengibre ::= regalos |
              gengibre regalos ;
+```
 
-// Siguiendo la foto de ejemplo del profe esta linea es la de expr = expresion
+> Siguiendo la foto de ejemplo del profe, esta línea es la de `expr = expresion`
+```
 regalos ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | nueces | regresaFiesta
+```
 
-// mezcla es el equivalente a estructura
+> `mezcla` es el equivalente a `estructura`
+
+```
 mezcla ::= galletaControl |
            chocolate |
            leche ;
+```
 
-// nueves equivale a exprUni
+> `nueces` equivale a `exprUni`
+
+```
 nueces ::= nuezMacadamia FINREGALO ;
+```
 
-// nuezMacadamia equivale a exprP
+> `nuezMacadamia` equivale a `exprP`
+
+```
 nuezMacadamia :: = regaloPrin | 
                    nuezTostada
+```
 
-// nuezTostada equivalente a exprRelLog del profe
+> `nuezTostada` equivalente a exprRelLog del `profe`
+
+```
 nuezTostada ::= regaloComprado |
                 regaloManual
+```
 
-// galletaControl son los if -> estrucutra de control
-// galletaRegalo = if, galletaNavidad = elif y galletaChocolate = else
+> `galletaControl` son los `if -> estrucutra de control`
+```
+galletaRegalo = if, galletaNavidad = elif y galletaChocolate = else
 galletaControl ::= galletaRegalo |
                    galletaNavidad |
                    galletaChocolate ;
@@ -238,34 +255,46 @@ galletaRegalo ::= ELFO ABRECUENTO nuezTostada CIERRACUENTO ABREREGALO gengibre C
 galletaNavidad ::= HADA ABRECUENTO nuezTostada CIERRACUENTO ABREREGALO gengibre CIERRAREGALO ;
 
 galletaChocolate ::= DUENDE ABREREGALO gengibre CIERRAREGALO ;
-
 ```
 
-_(m) do-until y for. retun, break -> do{algo}whhile(a != 0) o for(i+10,3*2,2+1){}_
+- _(m) `do-until` y `for`. return, `break -> do {algo} while(a != 0)` o `for(i+10,3*2,2+1){}`_
+
+> `chocolate` es el `for` 
 
 ```
-// chocolate es el for 
 chocolate ::= ENVUELVE ABRECUENTO cacao CIERRACUENTO ABREREGALO gengibre CIERRAREGALO
+```
 
-// cacao es el rango del for. (1) | (1,1) | (1,1,1) -> debería aceptar variables como i
+> `cacao` es el rango del `for`. (1) | (1,1) | (1,1,1) -> debería aceptar variables como `i`
+
+```
 cacao ::= l_SANNICOLAS |
           l_SANNICOLAS ADORNO l_SANNICOLAS |
-          l_SANNICOLAS ADORNO l_SANNICOLAS ADORNO l_SANNICOLAS ; // a lo que entiendo del comentario del profe cacao solo necesita esta linea
-
-// regresaFiesta es return
-regresaFiesta ::= ENVIA FINREGALO |
-                  ENVIA ADORNO regalos FINREGALO ;
-
-// terminaFiesta es break
-terminaFiesta ::= CORTA FINREGALO ;
-
-// leche es el do until (lo asumí como do while)
-// do {i*2} until (i < 10)|
-leche ::= HACE ABREREGALO gengibre CIERRAREGALO REVISA ABRECUENTO nueces CIERRACUENTO ;
-
+          l_SANNICOLAS ADORNO l_SANNICOLAS ADORNO l_SANNICOLAS ;
 ```
 
-- _(n) Entrada y salida -> print y read -> print("hola" o print("adios"))_
+> A lo que entiendo del comentario del profe cacao solo necesita esta línea
+> `regresaFiesta` es `return`
+
+```
+regresaFiesta ::= ENVIA FINREGALO |
+                  ENVIA ADORNO regalos FINREGALO ;
+```
+
+> `terminaFiesta` es `break`
+
+```
+terminaFiesta ::= CORTA FINREGALO ;
+```
+
+> leche es el `do until` (lo asumí como `do while`):  
+> `do {i*2} until (i < 10)|`
+
+```
+leche ::= HACE ABREREGALO gengibre CIERRAREGALO REVISA ABRECUENTO nueces CIERRACUENTO ;
+```
+
+- _(n) Entrada y salida: `print` y `read` -> `print("hola")` o `print("adios")`_
 
 ```
 narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
@@ -276,5 +305,4 @@ narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
 
 escuchaCuento ::= ESCUCHA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
                   ESCUCHA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO ;
-
 ```
