@@ -260,7 +260,8 @@ regresaFiesta ::= ENVIA FINREGALO |
 terminaFiesta ::= CORTA FINREGALO ;
 
 // leche es el do until (lo asumí como do while)
-leche ::= HACE ABREREGALO gengibre CIERRAREGALO REVISA ABRECUENTO "nuezTostada" CIERRACUENTO ;
+// do {i*2} until (i < 10)|
+leche ::= HACE ABREREGALO gengibre CIERRAREGALO REVISA ABRECUENTO nueces CIERRACUENTO ;
 
 ```
 
