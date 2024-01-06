@@ -67,19 +67,148 @@ terminal            ADORNO;
 terminal            PERSONA;
 
 /* Non-terminals (symbols used in the grammar). */
-non terminal        navidad;
+non terminal        rutaNavideña, gengibre, rutaNavideñaAux, tSantaClaus, tlSantaClaus, creaRegalo, creaEntregaRegalo, regaloPrin, regaloManual;
+
+non terminal        entregaRegalo, nueces, trineoSanta, paqueteTrineoSanta, entregaTrineoSanta, confites, bolsaNavideña, envoltorios, llamadaNavideña;
+
+non terminal        regaloAgregado, regaloMultiplicado, regaloCompartido, regaloVolador, confite, personaAdornada, regaloComprado, regalos, mezcla;
+
+non terminal        regresaFiesta, terminaFiesta, narraCuento, escuchaCuento, galletaControl, chocolate, leche, galletaRegalo, galletaNavidad, galletaChocolate;
+
+non terminal        regaloAbierto, bolsaNavideñaAux, navidad;
 
 /* Start symbol (the symbol the parser will start with). */
 start with          navidad;
 
-navidad ::=         COLACHO | SANNICOLAS | SINTERKLAAS | PAPANOEL | DEDMOROZ |
-                    l_SANNICOLAS | l_SINTERKLAAS | l_tCOLACHO | l_fCOLACHO | l_PAPANOEL | l_DEDMOROZ |
-                    ENTREGA | RODOLFO | BRIOSO | DANZARIN | BROMISTA | COMETA | CUPIDO |
-                    CANALLA | CHISPA | BUFON | ASTUTO | COPODENIEVE | FELICIDAD |
-                    GRINCH | QUIEN |
-                    MELCHOR | GASPAR | BALTASAR |
-                    ABREREGALO | CIERRAREGALO | ABRECUENTO | CIERRACUENTO | FINREGALO |
-                    ELFO | HADA | DUENDE | ENVUELVE | HACE | REVISA | ENVIA | CORTA |
-                    NARRA | ESCUCHA |
-                    ADORNO |
-                    PERSONA;
+/* Grammar*/
+rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO ;
+
+rutaNavideñaAux ::=  rutaNavideña |
+               ABREREGALO CIERRAREGALO ;
+
+tSantaClaus ::= 
+            COLACHO |
+            SANNICOLAS |
+            SINTERKLAAS |
+            PAPANOEL |
+            DEDMOROZ ;
+
+tlSantaClaus ::= 
+            l_SANNICOLAS |
+            l_SINTERKLAAS |
+            l_tCOLACHO |
+            l_fCOLACHO |
+            l_PAPANOEL |
+            l_DEDMOROZ ;
+
+creaRegalo ::= CHIMENEA tSantaClaus PERSONA ;
+
+creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regaloPrin ;
+creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regaloManual ;
+
+entregaRegalo ::= PERSONA ENTREGA regaloPrin ;
+entregaRegalo ::= PERSONA ENTREGA regaloManual ;
+
+nueces ::= regaloPrin | regaloManual ;
+
+trineoSanta ::= CHIMENEA SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
+                CHIMENEA PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+
+paqueteTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
+
+entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus FINREGALO ;
+
+confites ::= confites ADORNO tSantaClaus PERSONA |
+             tSantaClaus PERSONA ;
+
+bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO rutaNavideña |
+                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO rutaNavideña ;
+
+envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
+
+llamadaNavideña ::= PERSONA ABRECUENTO envoltorios CIERRACUENTO |
+                    PERSONA ABRECUENTO CIERRACUENTO ;
+
+regaloPrin ::= regaloAgregado ;
+
+regaloAgregado ::= regaloAgregado RODOLFO regaloMultiplicado |
+                   regaloAgregado BRIOSO regaloMultiplicado  |
+                   regaloMultiplicado ;
+
+regaloMultiplicado ::= regaloMultiplicado BROMISTA regaloCompartido |
+                       regaloMultiplicado COMETA regaloCompartido |
+                       regaloCompartido ;
+
+regaloCompartido ::= regaloCompartido CUPIDO regaloVolador |
+                     regaloVolador ;
+
+regaloVolador ::= regaloVolador DANZARIN confite |
+                  confite ;
+
+confite ::= ABRECUENTO regaloAgregado CIERRACUENTO |
+            PERSONA |
+            personaAdornada |
+            tlSantaClaus | llamadaNavideña | paqueteTrineoSanta ;
+
+personaAdornada ::= GRINCH PERSONA |
+                    QUIEN PERSONA ;
+
+regaloComprado ::= regaloPrin CANALLA regaloPrin |
+                   regaloPrin CHISPA regaloPrin |
+                   regaloPrin BUFON regaloPrin |
+                   regaloPrin ASTUTO regaloPrin |
+                   regaloPrin COPODENIEVE regaloPrin |
+                   regaloPrin FELICIDAD regaloPrin |
+                   l_tCOLACHO | l_fCOLACHO | llamadaNavideña ;
+
+regaloManual ::= regaloManual MELCHOR regaloManual |
+                 regaloManual GASPAR regaloManual |
+                 BALTASAR regaloManual |
+                 regaloComprado ;
+
+gengibre ::= gengibre regalos |
+             regalos ;
+
+regalos ::= creaRegalo FINREGALO | creaEntregaRegalo FINREGALO | entregaRegalo FINREGALO | mezcla |
+            nueces FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento | rutaNavideñaAux |
+            FINREGALO ;
+
+mezcla ::= galletaControl |
+           chocolate |
+           leche ;
+
+galletaControl ::= galletaRegalo galletaNavidad galletaChocolate |
+                   galletaRegalo galletaNavidad |
+                   galletaRegalo galletaChocolate |
+                   galletaRegalo ;
+
+galletaRegalo ::= ELFO ABRECUENTO regaloManual CIERRACUENTO rutaNavideñaAux ;
+
+galletaNavidad ::= HADA ABRECUENTO regaloManual CIERRACUENTO rutaNavideñaAux ;
+
+galletaChocolate ::= DUENDE rutaNavideñaAux ;
+
+chocolate ::= ENVUELVE ABRECUENTO regaloAbierto FINREGALO regaloManual FINREGALO regaloAbierto CIERRACUENTO rutaNavideñaAux ;
+
+regaloAbierto ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | nueces | narraCuento | escuchaCuento | rutaNavideñaAux ;
+
+regresaFiesta ::= ENVIA FINREGALO |
+                  ENVIA ADORNO regalos FINREGALO ;
+
+terminaFiesta ::= CORTA FINREGALO ;
+
+leche ::= HACE rutaNavideñaAux REVISA ABRECUENTO regaloManual CIERRACUENTO ;
+
+narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO l_PAPANOEL CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO |
+                NARRA ABRECUENTO PERSONA CIERRACUENTO FINREGALO ;
+
+escuchaCuento ::= ESCUCHA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
+                  ESCUCHA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO ;
+
+bolsaNavideñaAux ::= bolsaNavideñaAux bolsaNavideña |
+                     bolsaNavideña ;
+
+navidad ::= {:System.out.println("Inicio de parseo");:} bolsaNavideñaAux {:System.out.println("Fin de parseo");:};

@@ -78,11 +78,11 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 %%
 
 /* keywords */
-<YYINITIAL> "boolean"            { return symbol(sym.COLACHO); }
-<YYINITIAL> "int"                { return symbol(sym.SANNICOLAS); }
-<YYINITIAL> "float"              { return symbol(sym.SINTERKLAAS); }
-<YYINITIAL> "char"               { return symbol(sym.PAPANOEL); }
-<YYINITIAL> "string"             { return symbol(sym.DEDMOROZ); }
+<YYINITIAL> "boolean"            { return symbol(sym.COLACHO, yytext()); }
+<YYINITIAL> "int"                { return symbol(sym.SANNICOLAS, yytext()); }
+<YYINITIAL> "float"              { return symbol(sym.SINTERKLAAS, yytext()); }
+<YYINITIAL> "char"               { return symbol(sym.PAPANOEL, yytext()); }
+<YYINITIAL> "string"             { return symbol(sym.DEDMOROZ, yytext()); }
 
 /* function keywords */
 <YYINITIAL> "function"           { return symbol(sym.BOLSA); }
@@ -104,12 +104,12 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
     "<="                           { return symbol(sym.ENTREGA); }
 
     /* binary */
-    "+"                            { return symbol(sym.RODOLFO); }
-    "-"                            { return symbol(sym.BRIOSO); }
-    "**"                           { return symbol(sym.DANZARIN); }
-    "*"                            { return symbol(sym.BROMISTA); }
-    "/"                            { return symbol(sym.COMETA); }
-    "~"                            { return symbol(sym.CUPIDO); }
+    "+"                            { return symbol(sym.RODOLFO, yytext()); }
+    "-"                            { return symbol(sym.BRIOSO, yytext()); }
+    "**"                           { return symbol(sym.DANZARIN, yytext()); }
+    "*"                            { return symbol(sym.BROMISTA, yytext()); }
+    "/"                            { return symbol(sym.COMETA, yytext()); }
+    "~"                            { return symbol(sym.CUPIDO, yytext()); }
 
     /* relational */
     "<"                            { return symbol(sym.CANALLA); }
