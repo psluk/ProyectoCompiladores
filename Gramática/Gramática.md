@@ -19,46 +19,46 @@
 
 ## Listado de no terminales
 
-- `navidad`
 - `rutaNavideña`
+- `gengibre`
 - `rutaNavideñaAux`
 - `tSantaClaus`
 - `tlSantaClaus`
-- `tlSantaClausNumero`
 - `creaRegalo`
 - `creaEntregaRegalo`
+- `regaloPrin`
+- `regaloManual`
 - `entregaRegalo`
+- `nueces`
 - `trineoSanta`
 - `paqueteTrineoSanta`
 - `entregaTrineoSanta`
 - `confites`
 - `bolsaNavideña`
-- `regaloPrin`
-- `regaloVolador`
-- `regaloCompartido`
-- `regaloMultiplicado`
+- `envoltorios`
+- `llamadaNavideña`
 - `regaloAgregado`
+- `regaloMultiplicado`
+- `regaloCompartido`
+- `regaloVolador`
+- `confite`
 - `personaAdornada`
 - `regaloComprado`
-- `regaloManual`
-- `llamadaNavideña`
-- `caminoNavideño`
+- `regalos`
+- `mezcla`
+- `regresaFiesta`
+- `terminaFiesta`
+- `narraCuento`
+- `escuchaCuento`
 - `galletaControl`
+- `chocolate`
+- `leche`
 - `galletaRegalo`
 - `galletaNavidad`
 - `galletaChocolate`
-- `chocolate`
-- `cacao`
-- `narracuento`
-- `escuchacuento`
-- `gengibre`
-- `regalos`
-- `nueces`
-- `mezcla`
-- `nuezTostada`
-- `regresaFiesta`
-- `terminaFiesta`
-- `leche`
+- `regaloAbierto`
+- `bolsaNavideñaAux`
+- `navidad`
 
 ## Símbolo inicial
 
@@ -66,13 +66,11 @@
 
 ## Listado de producciones
 
-// El día de la entrega no vi este bloque y lo volví a definir el la línea 207 como gengibre
-
 - _`rutaNavideña` = bloque de código_    
 _(`rutaNavideñaAux` permite un bloque vacío)_
 
 ```
-rutaNavideña ::= ABREREGALO lineasNavidad CIERRAREGALO ;
+rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO ;
 
 rutaNavideñaAux ::=  rutaNavideña |
                ABREREGALO CIERRAREGALO ;
@@ -104,24 +102,30 @@ tlSantaClaus ::=
 - _`creaRegalo` = variables (b), (d)_
 
 ```
-creaRegalo :: = tSantaClaus PERSONA FINREGALO ;
+creaRegalo :: = CHIMENEA tSantaClaus PERSONA ;
 ```
 
 - _`creaEntregaRegalo` = asignar variable (d)_
 
 ```
-creaEntregaRegalo :: = tSantaClaus PERSONA ENTREGA regaloPrin FINREGALO ;
-creaEntregaRegalo :: = tSantaClaus PERSONA ENTREGA regaloManual FINREGALO ;
+creaEntregaRegalo :: = CHIMENEA tSantaClaus PERSONA ENTREGA regaloPrin ;
+creaEntregaRegalo :: = CHIMENEA tSantaClaus PERSONA ENTREGA regaloManual ;
 
-entregaRegalo ::= PERSONA ENTREGA regaloPrin FINREGALO ;
-entregaRegalo ::= PERSONA ENTREGA regaloManual FINREGALO ;
+entregaRegalo ::= PERSONA ENTREGA regaloPrin ;
+entregaRegalo ::= PERSONA ENTREGA regaloManual ;
+```
+
+> Expresiones sueltas
+
+```
+nueces ::= regaloPrin | regaloManual ;
 ```
 
 - _`trineoSanta` = arreglo estático (c)_
 
 ```
-trineoSanta ::= SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
-                   PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+trineoSanta ::= CHIMENEA SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
+                CHIMENEA PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
 ```
 
 - _`paqueteTrineoSanta` = lee un elemento del arreglo_
@@ -136,15 +140,21 @@ paqueteTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
 entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus FINREGALO ;
 ```
 
-- _(a) funciones  -> function int persona (parametros){bloque de codigo}_
+- _(a) funciones  -> function int persona (parametros){bloque de código}_
 
 ```
 confites ::= confites ADORNO tSantaClaus PERSONA |
              tSantaClaus PERSONA ;
 
-// El REGALO que se usa aqui lo definí como regalos en la línea 211 
-bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO REGALO |
-                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO REGALO ;
+bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO rutaNavideña |
+                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO rutaNavideña ;
+```
+
+```
+envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
+
+llamadaNavideña ::= PERSONA ABRECUENTO envoltorios CIERRACUENTO |
+                    PERSONA ABRECUENTO CIERRACUENTO ;
 ```
 
 - _(e, f, g) expresiones y combinación de ellas, respetando precedencia_
@@ -155,7 +165,7 @@ regaloPrin ::= regaloAgregado ;
 
 regaloAgregado ::= regaloAgregado RODOLFO regaloMultiplicado |
                    regaloAgregado BRIOSO regaloMultiplicado  |
-                   regaloAgregado ::= regaloMultiplicado ;
+                   regaloMultiplicado ;
 
 regaloMultiplicado ::= regaloMultiplicado BROMISTA regaloCompartido |
                        regaloMultiplicado COMETA regaloCompartido |
@@ -170,7 +180,7 @@ regaloVolador ::= regaloVolador DANZARIN confite |
 confite ::= ABRECUENTO regaloAgregado CIERRACUENTO |
             PERSONA |
             personaAdornada |
-            tl_SantaClaus | llamadaNavideña ;
+            tlSantaClaus | llamadaNavideña | paqueteTrineoSanta ;
 ```
 
 - _(h) Operaciones unarias (el negativo lo detecta el lexer)_
@@ -201,21 +211,26 @@ regaloManual ::= regaloManual MELCHOR regaloManual |
                  regaloComprado ;
 ```
 
-- _(m) Estructuras de control (if-[elif]-[else]) -> if(a > b){print{a}}_
-
-> `gengibre` sería `bloque` en el código del profe
+> `gengibre` son las líneas de código
 
 ```
-gengibre ::= regalos |
-             gengibre regalos ;
+gengibre ::= gengibre regalos |
+             regalos ;
 ```
 
-> Siguiendo la foto de ejemplo del profe, esta línea es la de `expr = expresion`
+> `regalos` es una sola línea de código (o un bloque `{...}` con `rutaNavideñaAux`)
+
 ```
-regalos ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | nueces | regresaFiesta
+regalos ::= creaRegalo FINREGALO | creaEntregaRegalo FINREGALO | entregaRegalo FINREGALO | mezcla |
+            nueces FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento | rutaNavideñaAux |
+            FINREGALO ;
 ```
 
-> `mezcla` es el equivalente a `estructura`
+- _(m) Estructuras de control (`if`-[`elif`]-[`else`]) -> `if(a > b){print(a)|}`_
+
+> - `galletaControl` son los `if`, `elif` y `else`
+> - `galletaRegalo` = `if`, `galletaNavidad` = `elif` y `galletaChocolate` = `else`
+> - `if` es obligatorio; `elif` y `else` son opcionales, así que se incluyen las combinaciones
 
 ```
 mezcla ::= galletaControl |
@@ -223,57 +238,29 @@ mezcla ::= galletaControl |
            leche ;
 ```
 
-> `nueces` equivale a `exprUni`
-
 ```
-nueces ::= nuezMacadamia FINREGALO ;
-```
+galletaControl ::= galletaRegalo galletaNavidad galletaChocolate |
+                   galletaRegalo galletaNavidad |
+                   galletaRegalo galletaChocolate |
+                   galletaRegalo ;
 
-> `nuezMacadamia` equivale a `exprP`
+galletaRegalo ::= ELFO ABRECUENTO regaloManual CIERRACUENTO rutaNavideñaAux ;
 
-```
-nuezMacadamia :: = regaloPrin | 
-                   nuezTostada
-```
+galletaNavidad ::= HADA ABRECUENTO regaloManual CIERRACUENTO rutaNavideñaAux ;
 
-> `nuezTostada` equivalente a exprRelLog del `profe`
-
-```
-nuezTostada ::= regaloComprado |
-                regaloManual
+galletaChocolate ::= DUENDE rutaNavideñaAux ;
 ```
 
-> `galletaControl` son los `if -> estrucutra de control`
-```
-galletaRegalo = if, galletaNavidad = elif y galletaChocolate = else
-galletaControl ::= galletaRegalo |
-                   galletaNavidad |
-                   galletaChocolate ;
-
-galletaRegalo ::= ELFO ABRECUENTO nuezTostada CIERRACUENTO ABREREGALO gengibre CIERRAREGALO ;
-
-galletaNavidad ::= HADA ABRECUENTO nuezTostada CIERRACUENTO ABREREGALO gengibre CIERRAREGALO ;
-
-galletaChocolate ::= DUENDE ABREREGALO gengibre CIERRAREGALO ;
-```
-
-- _(m) `do-until` y `for`. return, `break -> do {algo} while(a != 0)` o `for(i+10,3*2,2+1){}`_
+- _(m) `do-until` y `for`. `return`, `break`_
 
 > `chocolate` es el `for` 
 
 ```
-chocolate ::= ENVUELVE ABRECUENTO cacao CIERRACUENTO ABREREGALO gengibre CIERRAREGALO
+chocolate ::= ENVUELVE ABRECUENTO regaloAbierto FINREGALO regaloManual FINREGALO regaloAbierto CIERRACUENTO rutaNavideñaAux ;
+
+regaloAbierto ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | nueces | narraCuento | escuchaCuento | rutaNavideñaAux ;
 ```
 
-> `cacao` es el rango del `for`. (1) | (1,1) | (1,1,1) -> debería aceptar variables como `i`
-
-```
-cacao ::= l_SANNICOLAS |
-          l_SANNICOLAS ADORNO l_SANNICOLAS |
-          l_SANNICOLAS ADORNO l_SANNICOLAS ADORNO l_SANNICOLAS ;
-```
-
-> A lo que entiendo del comentario del profe cacao solo necesita esta línea
 > `regresaFiesta` es `return`
 
 ```
@@ -288,10 +275,10 @@ terminaFiesta ::= CORTA FINREGALO ;
 ```
 
 > leche es el `do until` (lo asumí como `do while`):  
-> `do {i*2} until (i < 10)|`
+> `do {i * 2} until (i < 10)|`
 
 ```
-leche ::= HACE ABREREGALO gengibre CIERRAREGALO REVISA ABRECUENTO nueces CIERRACUENTO ;
+leche ::= HACE rutaNavideñaAux REVISA ABRECUENTO regaloManual CIERRACUENTO ;
 ```
 
 - _(n) Entrada y salida: `print` y `read` -> `print("hola")` o `print("adios")`_
@@ -305,4 +292,13 @@ narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
 
 escuchaCuento ::= ESCUCHA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
                   ESCUCHA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO ;
+```
+
+- _Producción inicial_
+
+```
+bolsaNavideñaAux ::= bolsaNavideñaAux bolsaNavideña |
+                     bolsaNavideña ;
+
+navidad ::= bolsaNavideñaAux ;
 ```
