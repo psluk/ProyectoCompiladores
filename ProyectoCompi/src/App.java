@@ -54,10 +54,21 @@ public class App {
                 basePath + "\\src\\TestFiles\\output.txt");
     }
 
+    public static void runParser() throws Exception {
+        String basePath;
+
+        MainJflexCup mfjc = new MainJflexCup();
+
+        basePath = System.getProperty("user.dir");
+
+        mfjc.runParser(basePath + "\\src\\TestFiles\\testCode.txt");
+    }
+
     public static void main(String[] args) throws Exception {
         // For a better performance, run first generateLexerParser()
         // and then runTest()
-        generateLexerParser();
-        runTest(); 
+        //generateLexerParser();
+        //runTest();
+        runParser(); 
     }
 }

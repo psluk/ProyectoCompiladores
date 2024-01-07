@@ -23,7 +23,7 @@ action code {:
     }
 
     public String getTipo(ArrayList<String> tablaSimbolos, String id){
-        String tipo = "nul";
+        String tipo = "null";
         for (String token : tablaSimbolos) {
             String[] partesToken = token.split(":");
             if(id.equals(partesToken[0])){
@@ -173,7 +173,8 @@ confites ::= confites ADORNO tSantaClaus PERSONA |
 
 bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO rutaNavideña |
                   BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO rutaNavideña ;
-                  envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
+
+envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
 
 llamadaNavideña ::= PERSONA ABRECUENTO envoltorios CIERRACUENTO |
                     PERSONA ABRECUENTO CIERRACUENTO ;

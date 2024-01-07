@@ -62,4 +62,12 @@ public class MainJflexCup {
         System.out.println("Archivo generado en: " + outputPath);
     }
 
+    public void runParser(String inputPath) throws Exception{
+        Reader inputLexer = new FileReader(inputPath);
+        LexerProject lexer = new LexerProject(inputLexer);
+
+        parser parserProject = new parser(lexer);
+        parserProject.parse();
+    }
+
 }
