@@ -2,6 +2,40 @@
 package ParserLexer;
 import java_cup.runtime.*;
 
+//Symbols table management
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+
+action code {:
+    HashMap<String, ArrayList<String>> listaTablaSimbolos = new HashMap<String, ArrayList<String>>();
+    String currentHash;
+
+    public void imprimirTabla(){
+        for (String key: listaTablaSimbolos.keySet()) {
+            System.out.println("Tabla de símbolo : " + key);
+            System.out.println("Valores : ");
+            for (String item : listaTablaSimbolos.get(key)) {
+                System.out.println(item);
+            }
+            System.out.println("");
+        }
+    }
+
+    public String getTipo(ArrayList<String> tablaSimbolos, String id){
+        String tipo = "nul";
+        for (String token : tablaSimbolos) {
+            String[] partesToken = token.split(":");
+            if(id.equals(partesToken[0])){
+                tipo = partesToken[1];
+            }
+        }
+        System.out.println("tipo: " + tipo);
+        return tipo;
+    }
+
+:}
+
 parser code {:
     // Connect this parser to a scanner!
     LexerProject lexer;
