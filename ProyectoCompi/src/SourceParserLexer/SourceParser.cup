@@ -124,11 +124,11 @@ rutaNavideñaAux ::=  rutaNavideña |
 /* _`tSantaClaus` = tipo de santa = tipos_ */
 
 tSantaClaus ::= 
-            COLACHO |
-            SANNICOLAS |
-            SINTERKLAAS |
-            PAPANOEL |
-            DEDMOROZ ;
+            COLACHO:tp {:RESULT = tp;:} |
+            SANNICOLAS:tp {:RESULT = tp;:} |
+            SINTERKLAAS:tp {:RESULT = tp;:} |
+            PAPANOEL:tp {:RESULT = tp;:} |
+            DEDMOROZ:tp {:RESULT = tp;:} ;
             
 /* _`tlSantaClaus` = tipo de literal (b)_ */
 
@@ -317,4 +317,11 @@ escuchaCuento ::= ESCUCHA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
 bolsaNavideñaAux ::= bolsaNavideñaAux bolsaNavideña |
                      bolsaNavideña ;
 
-navidad ::= {:System.out.println("Inicio de parseo");:} bolsaNavideñaAux {:System.out.println("Fin de parseo");:};
+navidad ::= {: 
+                System.out.println("Inicio de parseo");
+            :}
+            bolsaNavideñaAux
+            {: 
+                imprimirTabla();
+                System.out.println("Fin de parseo");
+            :};
