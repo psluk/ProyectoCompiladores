@@ -63,7 +63,7 @@ HexDigit = [0-9a-fA-F]
     // To use in CharLiteral, for Unicode escape sequences
 
 /* literals */
-DecIntegerLiteral = -? (0 | [1-9][0-9]*)
+DecIntegerLiteral = (0 | [1-9][0-9]*)
 FloatLiteral      = {DecIntegerLiteral}? \. [0-9]+ ([eE] [+-]? [0-9]+)?
                     | {DecIntegerLiteral} [eE] [+-]? [0-9]+
                     | {DecIntegerLiteral} \.
