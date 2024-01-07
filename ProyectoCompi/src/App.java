@@ -58,6 +58,6 @@ public class App {
         // For a better performance, run first generateLexerParser()
         // and then runTest()
         generateLexerParser();
-        //runTest(); 
+        runTest(); 
     }
 }
