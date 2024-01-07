@@ -67,24 +67,27 @@ terminal            ADORNO;
 terminal            PERSONA;
 
 /* Non-terminals (symbols used in the grammar). */
-non terminal        rutaNavideña, gengibre, rutaNavideñaAux, tSantaClaus, tlSantaClaus, creaRegalo, creaEntregaRegalo, regaloPrin, regaloManual;
-
-non terminal        entregaRegalo, nueces, trineoSanta, paqueteTrineoSanta, entregaTrineoSanta, confites, bolsaNavideña, envoltorios, llamadaNavideña;
-
-non terminal        regaloAgregado, regaloMultiplicado, regaloCompartido, regaloVolador, confite, personaAdornada, regaloComprado, regalos, mezcla;
-
-non terminal        regresaFiesta, terminaFiesta, narraCuento, escuchaCuento, galletaControl, chocolate, leche, galletaRegalo, galletaNavidad, galletaChocolate;
-
-non terminal        regaloAbierto, bolsaNavideñaAux, navidad;
+non terminal        rutaNavideña, gengibre, rutaNavideñaAux, tSantaClaus, tlSantaClaus, creaRegalo, creaEntregaRegalo,
+                    regalo, regaloManual, entregaRegalo, regaloEnvuelto, trineoSanta, paqueteTrineoSanta,
+                    entregaTrineoSanta, confites, bolsaNavideña, envoltorios, llamadaNavideña, regaloPrin,
+                    regaloAgregado, regaloMultiplicado, regaloCompartido, regaloVolador, confiteAdornado,
+                    regaloComprado, regaloConfirmado, confite, regalos, mezcla, regresaFiesta, terminaFiesta,
+                    narraCuento, escuchaCuento, galletaControl, chocolate, leche, galletaRegalo, galletaNavidad,
+                    galletaChocolate, regaloAbierto, bolsaNavideñaAux, navidad;
 
 /* Start symbol (the symbol the parser will start with). */
 start with          navidad;
 
-/* Grammar*/
+/* Grammar */
+/* _`rutaNavideña` = bloque de código_     */
+// _(`rutaNavideñaAux` permite un bloque vacío)_
+
 rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO ;
 
 rutaNavideñaAux ::=  rutaNavideña |
                ABREREGALO CIERRAREGALO ;
+               
+/* _`tSantaClaus` = tipo de santa = tipos_ */
 
 tSantaClaus ::= 
             COLACHO |
@@ -92,6 +95,8 @@ tSantaClaus ::=
             SINTERKLAAS |
             PAPANOEL |
             DEDMOROZ ;
+            
+/* _`tlSantaClaus` = tipo de literal (b)_ */
 
 tlSantaClaus ::= 
             l_SANNICOLAS |
@@ -100,34 +105,60 @@ tlSantaClaus ::=
             l_fCOLACHO |
             l_PAPANOEL |
             l_DEDMOROZ ;
+            
+/* _`creaRegalo` = variables (b), (d)_ */
 
 creaRegalo ::= CHIMENEA tSantaClaus PERSONA ;
 
-creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regaloPrin ;
-creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regaloManual ;
+/* _`creaEntregaRegalo` = asignar variable (d)_ */
 
-entregaRegalo ::= PERSONA ENTREGA regaloPrin ;
-entregaRegalo ::= PERSONA ENTREGA regaloManual ;
+creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regalo ;
 
-nueces ::= regaloPrin | regaloManual ;
+entregaRegalo ::= PERSONA ENTREGA regalo ;
 
-trineoSanta ::= CHIMENEA SANNICOLAS PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO |
-                CHIMENEA PAPANOEL PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE FINREGALO ;
+// Expresiones sueltas:
+
+regalo ::= regaloManual ;
+
+/* _`trineoSanta` = arreglo estático (c)_ */
+
+trineoSanta ::= CHIMENEA tSantaClaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
+
+/* _`paqueteTrineoSanta` = lee un elemento del arreglo_ */
 
 paqueteTrineoSanta ::= PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
 
-entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus FINREGALO ;
+/* _`entregaTrineoSanta`: `AAA[0] <= 1 |` → asignar valor al arreglo estático_ */
+
+entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus ;
+
+/* _(a) funciones  -> function int persona (parametros){bloque de código}_ */
 
 confites ::= confites ADORNO tSantaClaus PERSONA |
              tSantaClaus PERSONA ;
 
 bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO rutaNavideña |
                   BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO rutaNavideña ;
-
-envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
+                  envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
 
 llamadaNavideña ::= PERSONA ABRECUENTO envoltorios CIERRACUENTO |
                     PERSONA ABRECUENTO CIERRACUENTO ;
+                    
+/* _(e, f, g) expresiones y combinación de ellas, respetando precedencia_
+    - _Se crean cuatro niveles, tal que no se pueda volver de una operación de mayor precedencia a una de menor precedencia: 1: `**`, 2: `~`, 3: `*` o `/`, 4: `+` o `-`_  */
+
+// Se unificarán las expresiones aritméticas, relacionales y lógicas, con la siguiente precedencia:
+// - `!` (negación)
+// - `++`, `--`, `-` (el `-` unario)
+// - `**`
+// - `*`, `/`
+// - `~`
+// - `+`, `-`
+// - `<`, `<==`, `>`, `>=`, `==`, `!=`
+// - `^` (`AND`)
+// - `#` (`OR`)
+//
+// Por lo tanto, `++3 - 2 <== !2 ^ true` equivaldría a `(((++3) - 2) <== (!2)) ^ true`.
 
 regaloPrin ::= regaloAgregado ;
 
@@ -142,36 +173,60 @@ regaloMultiplicado ::= regaloMultiplicado BROMISTA regaloCompartido |
 regaloCompartido ::= regaloCompartido CUPIDO regaloVolador |
                      regaloVolador ;
 
-regaloVolador ::= regaloVolador DANZARIN confite |
-                  confite ;
+regaloVolador ::= regaloVolador DANZARIN regaloEnvuelto |
+                  regaloEnvuelto ;
+                  
+/* _(h) Operaciones unarias_ */
 
-confite ::= ABRECUENTO regaloAgregado CIERRACUENTO |
-            PERSONA |
-            personaAdornada |
-            tlSantaClaus | llamadaNavideña | paqueteTrineoSanta ;
-
-personaAdornada ::= GRINCH PERSONA |
+confiteAdornado ::= GRINCH PERSONA |
                     QUIEN PERSONA ;
+                    
+/* _(i) Expresiones relacionales (sobre enteros y flotantes)_ */
 
-regaloComprado ::= regaloPrin CANALLA regaloPrin |
-                   regaloPrin CHISPA regaloPrin |
-                   regaloPrin BUFON regaloPrin |
-                   regaloPrin ASTUTO regaloPrin |
-                   regaloPrin COPODENIEVE regaloPrin |
-                   regaloPrin FELICIDAD regaloPrin |
-                   l_tCOLACHO | l_fCOLACHO | llamadaNavideña ;
+regaloComprado ::= regaloComprado CANALLA regaloPrin |
+                   regaloComprado CHISPA regaloPrin |
+                   regaloComprado BUFON regaloPrin |
+                   regaloComprado ASTUTO regaloPrin |
+                   regaloComprado COPODENIEVE regaloPrin |
+                   regaloComprado FELICIDAD regaloPrin |
+                   regaloPrin ;
+                   
+/* _(j) Expresiones lógicas_ */
 
-regaloManual ::= regaloManual MELCHOR regaloManual |
-                 regaloManual GASPAR regaloManual |
-                 BALTASAR regaloManual |
-                 regaloComprado ;
+// Se necesita una regla adicional (`regaloEnvuelto`) para establecer la prioridad: primero la negación, luego el `AND` y luego el `OR`.
+
+regaloManual ::= regaloManual GASPAR regaloConfirmado |
+                 regaloConfirmado ;
+
+regaloConfirmado ::= regaloConfirmado MELCHOR regaloComprado |
+                    regaloComprado ;
+
+regaloEnvuelto ::= BALTASAR confite |
+                   confite ;
+
+confite ::= ABRECUENTO regalo CIERRACUENTO |
+            PERSONA |
+            confiteAdornado |
+            tlSantaClaus |
+            paqueteTrineoSanta |
+            llamadaNavideña ;
+            
+// `gengibre` son las líneas de código
 
 gengibre ::= gengibre regalos |
              regalos ;
+             
+// `regalos` es una sola línea de código (o un bloque `{...}` con `rutaNavideñaAux`)
 
 regalos ::= creaRegalo FINREGALO | creaEntregaRegalo FINREGALO | entregaRegalo FINREGALO | mezcla |
-            nueces FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento | rutaNavideñaAux |
-            FINREGALO ;
+            regalo FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento | rutaNavideñaAux |
+            trineoSanta FINREGALO | entregaTrineoSanta FINREGALO | FINREGALO ;
+            
+/* _(m) Estructuras de control (`if`-[`elif`]-[`else`]) -> `if(a > b){print(a)|}`_ */
+
+// - `galletaControl` son los `if`, `elif` y `else`
+// - `galletaRegalo` = `if`, `galletaNavidad` = `elif` y `galletaChocolate` = `else`
+// - `if` es obligatorio; `elif` y `else` son opcionales, así que se incluyen las combinaciones
 
 mezcla ::= galletaControl |
            chocolate |
@@ -182,22 +237,36 @@ galletaControl ::= galletaRegalo galletaNavidad galletaChocolate |
                    galletaRegalo galletaChocolate |
                    galletaRegalo ;
 
-galletaRegalo ::= ELFO ABRECUENTO regaloManual CIERRACUENTO rutaNavideñaAux ;
+galletaRegalo ::= ELFO ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
 
-galletaNavidad ::= HADA ABRECUENTO regaloManual CIERRACUENTO rutaNavideñaAux ;
+galletaNavidad ::= HADA ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
 
 galletaChocolate ::= DUENDE rutaNavideñaAux ;
 
-chocolate ::= ENVUELVE ABRECUENTO regaloAbierto FINREGALO regaloManual FINREGALO regaloAbierto CIERRACUENTO rutaNavideñaAux ;
+/* _(m) `do-until` y `for`. `return`, `break`_ */
 
-regaloAbierto ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | nueces | narraCuento | escuchaCuento | rutaNavideñaAux ;
+// `chocolate` es el `for` 
+
+chocolate ::= ENVUELVE ABRECUENTO regaloAbierto FINREGALO regalo FINREGALO regaloAbierto CIERRACUENTO rutaNavideñaAux ;
+
+regaloAbierto ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | regalo | narraCuento | escuchaCuento |
+                  rutaNavideñaAux | trineoSanta | entregaTrineoSanta ;
+                  
+// `regresaFiesta` es `return`
 
 regresaFiesta ::= ENVIA FINREGALO |
                   ENVIA ADORNO regalos FINREGALO ;
+                  
+// `terminaFiesta` es `break`
 
 terminaFiesta ::= CORTA FINREGALO ;
 
-leche ::= HACE rutaNavideñaAux REVISA ABRECUENTO regaloManual CIERRACUENTO ;
+// leche es el `do until` (se asumió como `do while`):  
+// `do {i * 2} until (i < 10)|`
+
+leche ::= HACE rutaNavideñaAux REVISA ABRECUENTO regalo CIERRACUENTO ;
+
+/* _(n) Entrada y salida: `print` y `read` -> `print("hola")` o `print("adios")`_ */
 
 narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
                 NARRA ABRECUENTO l_PAPANOEL CIERRACUENTO FINREGALO |
@@ -207,6 +276,8 @@ narraCuento ::= NARRA ABRECUENTO l_DEDMOROZ CIERRACUENTO FINREGALO |
 
 escuchaCuento ::= ESCUCHA ABRECUENTO l_SANNICOLAS CIERRACUENTO FINREGALO |
                   ESCUCHA ABRECUENTO l_SINTERKLAAS CIERRACUENTO FINREGALO ;
+                  
+/* _Producción inicial_ */
 
 bolsaNavideñaAux ::= bolsaNavideñaAux bolsaNavideña |
                      bolsaNavideña ;
