@@ -20,11 +20,11 @@ import java.io.IOException;
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type) {
-        return new Symbol(type, yyline, yycolumn);
+        return new Symbol(type, yyline + 1, yycolumn + 1);
     }
 
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        return new Symbol(type, yyline + 1, yycolumn + 1, value);
     }
 
     public int getLine() {
@@ -91,11 +91,11 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
 <YYINITIAL> {
     
     /* literals */
-    {DecIntegerLiteral}            { return symbol(sym.l_SANNICOLAS); }
-    {FloatLiteral}                 { return symbol(sym.l_SINTERKLAAS); }
-    {BooleanLiteralT}              { return symbol(sym.l_tCOLACHO); }
-    {BooleanLiteralF}              { return symbol(sym.l_fCOLACHO); }
-    {CharLiteral}                  { return symbol(sym.l_PAPANOEL); }
+    {DecIntegerLiteral}            { return symbol(sym.l_SANNICOLAS, yytext()); }
+    {FloatLiteral}                 { return symbol(sym.l_SINTERKLAAS, yytext()); }
+    {BooleanLiteralT}              { return symbol(sym.l_tCOLACHO, yytext()); }
+    {BooleanLiteralF}              { return symbol(sym.l_fCOLACHO, yytext()); }
+    {CharLiteral}                  { return symbol(sym.l_PAPANOEL, yytext()); }
     \"                             { string.setLength(0); yybegin(STRING); }
     
 
@@ -104,12 +104,12 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
     "<="                           { return symbol(sym.ENTREGA); }
 
     /* binary */
-    "+"                            { return symbol(sym.RODOLFO, yytext()); }
-    "-"                            { return symbol(sym.BRIOSO, yytext()); }
-    "**"                           { return symbol(sym.DANZARIN, yytext()); }
-    "*"                            { return symbol(sym.BROMISTA, yytext()); }
-    "/"                            { return symbol(sym.COMETA, yytext()); }
-    "~"                            { return symbol(sym.CUPIDO, yytext()); }
+    "+"                            { return symbol(sym.RODOLFO); }
+    "-"                            { return symbol(sym.BRIOSO); }
+    "**"                           { return symbol(sym.DANZARIN); }
+    "*"                            { return symbol(sym.BROMISTA); }
+    "/"                            { return symbol(sym.COMETA); }
+    "~"                            { return symbol(sym.CUPIDO); }
 
     /* relational */
     "<"                            { return symbol(sym.CANALLA); }
@@ -155,7 +155,7 @@ CharLiteral       = \' ( [^\'\\\n\r] | \\ u {HexDigit} {HexDigit} {HexDigit} {He
     ","                            { return symbol(sym.ADORNO); }
 
     /* identifiers */ 
-    {Identifier}                   { return symbol(sym.PERSONA); }
+    {Identifier}                   { return symbol(sym.PERSONA, yytext()); }
 
     /* comments */
     {Comment}                      { /* ignore */ }

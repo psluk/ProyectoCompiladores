@@ -19,6 +19,7 @@
 
 ## Listado de no terminales
 
+- `abrirRuta`
 - `rutaNavideña`
 - `gengibre`
 - `rutaNavideñaAux`
@@ -72,7 +73,15 @@
 _(`rutaNavideñaAux` permite un bloque vacío)_
 
 ```
-rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO ;
+abrirRuta ::= ABREREGALO {:newScope();:} rutaNavideñaAux {:scope.pop();:} ;
+
+rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO |
+                 abrirRuta CIERRAREGALO |
+                 abrirRuta gengibre CIERRAREGALO ;
+
+rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO |
+                 abrirRuta gengibre CIERRAREGALO |
+                 abrirRuta CIERRAREGALO ;
 
 rutaNavideñaAux ::=  rutaNavideña |
                ABREREGALO CIERRAREGALO ;
@@ -110,7 +119,7 @@ creaRegalo ::= CHIMENEA tSantaClaus PERSONA ;
 - _`creaEntregaRegalo` = asignar variable (d)_
 
 ```
-creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regalo ;
+creaEntregaRegalo ::= creaRegalo ENTREGA regalo ;
 
 entregaRegalo ::= PERSONA ENTREGA regalo ;
 ```
@@ -145,8 +154,11 @@ entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus ;
 confites ::= confites ADORNO tSantaClaus PERSONA |
              tSantaClaus PERSONA ;
 
-bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO rutaNavideña |
-                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO rutaNavideña ;
+
+abrirBolsaNavideña ::= BOLSA tSantaClaus:tsc PERSONA:per ;
+
+bolsaNavideña ::= abrirBolsaNavideña ABRECUENTO confites CIERRACUENTO rutaNavideña |
+                  abrirBolsaNavideña ABRECUENTO CIERRACUENTO rutaNavideña ;
 ```
 
 ```
@@ -232,18 +244,19 @@ confite ::= ABRECUENTO regalo CIERRACUENTO |
             llamadaNavideña ;
 ```
 
-> `gengibre` son las líneas de código
+> `gengibre` son las líneas de código (o un bloque `{...}` con `rutaNavideñaAux`)
 
 ```
 gengibre ::= gengibre regalos |
+             gengibre rutaNavideñaAux |
              regalos ;
 ```
 
-> `regalos` es una sola línea de código (o un bloque `{...}` con `rutaNavideñaAux`)
+> `regalos` es una sola línea de código
 
 ```
 regalos ::= creaRegalo FINREGALO | creaEntregaRegalo FINREGALO | entregaRegalo FINREGALO | mezcla |
-            regalo FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento | rutaNavideñaAux |
+            regalo FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento |
             trineoSanta FINREGALO | entregaTrineoSanta FINREGALO | FINREGALO ;
 ```
 
@@ -267,7 +280,8 @@ galletaControl ::= galletaRegalo galletaNavidad galletaChocolate |
 
 galletaRegalo ::= ELFO ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
 
-galletaNavidad ::= HADA ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
+galletaNavidad ::= galletaNavidad HADA ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux |
+                   HADA ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
 
 galletaChocolate ::= DUENDE rutaNavideñaAux ;
 ```

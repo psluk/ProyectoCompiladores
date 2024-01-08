@@ -50,7 +50,7 @@ public class App {
 
         // If a new file needs to be analyzed
         // replace testCode.txt with the new file's name
-        mfjc.runTest(basePath + "\\src\\TestFiles\\testCode.txt",
+        mfjc.runLexerTest(basePath + "\\src\\TestFiles\\testCode.txt",
                 basePath + "\\src\\TestFiles\\output.txt");
     }
 
@@ -61,7 +61,7 @@ public class App {
 
         basePath = System.getProperty("user.dir");
 
-        mfjc.runParser(basePath + "\\src\\TestFiles\\testCode.txt");
+        mfjc.runParserTest(basePath + "\\src\\TestFiles\\testCode.txt", basePath + "\\src\\TestFiles\\output.txt");
     }
 
     public static void main(String[] args) throws Exception {

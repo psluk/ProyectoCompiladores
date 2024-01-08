@@ -28,7 +28,7 @@ public class MainJflexCup {
 
     // This function reads a file and generates an output file
     // after an lexic analysis
-    public void runTest(String inputPath, String outputPath) throws IOException {
+    public void runLexerTest(String inputPath, String outputPath) throws IOException {
         Reader reader = new BufferedReader(new FileReader(inputPath));
         reader.read();
         FileWriter writer = new FileWriter(outputPath);
@@ -62,12 +62,20 @@ public class MainJflexCup {
         System.out.println("Archivo generado en: " + outputPath);
     }
 
-    public void runParser(String inputPath) throws Exception{
+    public void runParserTest(String inputPath, String outputPath) throws Exception {
+        FileWriter writer = new FileWriter(outputPath);
         Reader inputLexer = new FileReader(inputPath);
-        LexerProject lexer = new LexerProject(inputLexer);
+        LexerProject lexer = new LexerProject(inputLexer, writer);
 
-        parser parserProject = new parser(lexer);
+        parser parserProject = new parser(lexer, writer);
         parserProject.parse();
+
+        // Close the reader and writer
+        inputLexer.close();
+        writer.close();
+
+        System.out.println("----------------------------------------------------");
+        System.out.println("Archivo generado en: " + outputPath);
     }
 
 }

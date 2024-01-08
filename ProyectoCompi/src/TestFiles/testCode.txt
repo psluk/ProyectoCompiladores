@@ -1,3 +1,27 @@
- function int main () {
-	local int mivar <= 67 |
+ function boolean mifun() {
+    local int miVar <= 82 <== 3|
+ } 
+function int main () {
+    local int mivar <= a + b * (c - 2) == 3 ^ !(x ~ 2 != 0) # ++y |
+}
+function boolean test (int amigo) {
+	{
+		local string elfo <= "¡Hola!" @ Esto es un comentario
+		|
+	}
+	local char rodolfo <= 'c'|
+    if (a + b * (c - 2) == 3 ^ !(x ~ 2 != 0) # ++y) {
+        local string hola1 <= "hola1"|
+    } elif (a + b * (c - 2) == 3 ^ !(x ~ 2 != 0) # ++y) {
+        local string hola1 <= "hola1"|
+    } elif (true) {
+        local string hola1 <= "hola1"|
+    } else {
+        local string hola1 <= "hola1"|
+		local int arreglo[1]|
+		arreglo[1] <= 1|
+    }
+	for (local int i <= 0 | i <== 2 | ++i) {
+		print("hola")|
+	}
 }

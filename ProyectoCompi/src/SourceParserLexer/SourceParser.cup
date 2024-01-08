@@ -2,50 +2,60 @@
 package ParserLexer;
 import java_cup.runtime.*;
 
-//Symbols table management
+// Symbol table management
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Stack;
+import java.io.FileWriter;
 
 action code {:
-    HashMap<String, ArrayList<String>> listaTablaSimbolos = new HashMap<String, ArrayList<String>>();
-    String currentHash;
+    HashMap<String, ArrayList<SymbolTableItem>> symbolTableList = new HashMap<String, ArrayList<SymbolTableItem>>();
+    Stack<String> scope = new Stack<String>();
+    // boolean startUnnamedBlock = false;
 
-    public void imprimirTabla(){
-        for (String key: listaTablaSimbolos.keySet()) {
-            System.out.println("Tabla de símbolo : " + key);
-            System.out.println("Valores : ");
-            for (String item : listaTablaSimbolos.get(key)) {
-                System.out.println(item);
+    // Needed for blocks without a name (e.g. if, else, etc.)
+    int unnamedBlockCount = 0;
+
+    public void printTable() throws Exception {
+        for (String key: symbolTableList.keySet()) {
+            writer.write("Tabla de símbolos: " + key + "\n");
+            writer.write("Valores: \n");
+            writer.write(SymbolTableItem.getFields() + "\n");
+            if (symbolTableList.get(key).isEmpty()) {
+                writer.write("/* Tabla vacía */\n");
             }
-            System.out.println("");
+            for (SymbolTableItem item : symbolTableList.get(key)) {
+                writer.write(item.toString() + "\n");
+            }
+            writer.write("\n");
         }
     }
 
-    public String getTipo(ArrayList<String> tablaSimbolos, String id){
-        String tipo = "null";
-        for (String token : tablaSimbolos) {
-            String[] partesToken = token.split(":");
-            if(id.equals(partesToken[0])){
-                tipo = partesToken[1];
-            }
-        }
-        System.out.println("tipo: " + tipo);
-        return tipo;
+    public String getCurrentScope(){
+        return scope.peek();
     }
 
+    public void newScope() {
+        // Creates a name for the scope
+        unnamedBlockCount++;
+        String unnamedBlockName = "block_" + unnamedBlockCount;
+        scope.push(unnamedBlockName);
+        symbolTableList.put(unnamedBlockName, new ArrayList<SymbolTableItem>());
+    }
 :}
 
 parser code {:
     // Connect this parser to a scanner!
     LexerProject lexer;
+    private FileWriter writer;
     
     @SuppressWarnings("deprecation")
-    public parser(LexerProject lexer){
+    public parser(LexerProject lexer, FileWriter out){
         this.lexer = lexer;
         this.symbolFactory = new DefaultSymbolFactory();
+        this.writer = out;
     }
-
 :}
 
 /* define how to connect to the scanner! */
@@ -101,9 +111,9 @@ terminal            ADORNO;
 terminal            PERSONA;
 
 /* Non-terminals (symbols used in the grammar). */
-non terminal        rutaNavideña, gengibre, rutaNavideñaAux, tSantaClaus, tlSantaClaus, creaRegalo, creaEntregaRegalo,
-                    regalo, regaloManual, entregaRegalo, regaloEnvuelto, trineoSanta, paqueteTrineoSanta,
-                    entregaTrineoSanta, confites, bolsaNavideña, envoltorios, llamadaNavideña, regaloPrin,
+non terminal        abrirRuta, rutaNavideña, gengibre, rutaNavideñaAux, tSantaClaus, tlSantaClaus, creaRegalo,
+                    creaEntregaRegalo, regalo, regaloManual, entregaRegalo, regaloEnvuelto, trineoSanta, paqueteTrineoSanta,
+                    entregaTrineoSanta, confites, abrirBolsaNavideña, bolsaNavideña, envoltorios, llamadaNavideña, regaloPrin,
                     regaloAgregado, regaloMultiplicado, regaloCompartido, regaloVolador, confiteAdornado,
                     regaloComprado, regaloConfirmado, confite, regalos, mezcla, regresaFiesta, terminaFiesta,
                     narraCuento, escuchaCuento, galletaControl, chocolate, leche, galletaRegalo, galletaNavidad,
@@ -116,19 +126,23 @@ start with          navidad;
 /* _`rutaNavideña` = bloque de código_     */
 // _(`rutaNavideñaAux` permite un bloque vacío)_
 
-rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO ;
+abrirRuta ::= ABREREGALO {:newScope();:} rutaNavideñaAux {:scope.pop();:} ;
 
-rutaNavideñaAux ::=  rutaNavideña |
-               ABREREGALO CIERRAREGALO ;
+rutaNavideña ::= ABREREGALO gengibre CIERRAREGALO |
+                 abrirRuta gengibre CIERRAREGALO |
+                 abrirRuta CIERRAREGALO ;
+
+rutaNavideñaAux ::= rutaNavideña |
+                    ABREREGALO CIERRAREGALO ;
                
 /* _`tSantaClaus` = tipo de santa = tipos_ */
 
 tSantaClaus ::= 
-            COLACHO:tp {:RESULT = tp;:} |
-            SANNICOLAS:tp {:RESULT = tp;:} |
-            SINTERKLAAS:tp {:RESULT = tp;:} |
-            PAPANOEL:tp {:RESULT = tp;:} |
-            DEDMOROZ:tp {:RESULT = tp;:} ;
+            COLACHO:tp {: RESULT = tp; :} |
+            SANNICOLAS:tp {: RESULT = tp; :} |
+            SINTERKLAAS:tp {: RESULT = tp; :} |
+            PAPANOEL:tp {: RESULT = tp; :} |
+            DEDMOROZ:tp {: RESULT = tp; :} ;
             
 /* _`tlSantaClaus` = tipo de literal (b)_ */
 
@@ -142,11 +156,15 @@ tlSantaClaus ::=
             
 /* _`creaRegalo` = variables (b), (d)_ */
 
-creaRegalo ::= CHIMENEA tSantaClaus PERSONA ;
+creaRegalo ::= CHIMENEA tSantaClaus:tsc PERSONA:per {:
+                symbolTableList.get(getCurrentScope()).add(
+                    new SymbolTableItem(per.toString(), tsc.toString(), "variable", perleft, perright)
+                    );
+                :} ;
 
 /* _`creaEntregaRegalo` = asignar variable (d)_ */
 
-creaEntregaRegalo ::= CHIMENEA tSantaClaus PERSONA ENTREGA regalo ;
+creaEntregaRegalo ::= creaRegalo ENTREGA regalo ;
 
 entregaRegalo ::= PERSONA ENTREGA regalo ;
 
@@ -156,7 +174,11 @@ regalo ::= regaloManual ;
 
 /* _`trineoSanta` = arreglo estático (c)_ */
 
-trineoSanta ::= CHIMENEA tSantaClaus PERSONA ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE ;
+trineoSanta ::= CHIMENEA tSantaClaus:tsc PERSONA:per ABREEMPAQUE l_SANNICOLAS CIERRAEMPAQUE {:
+                symbolTableList.get(getCurrentScope()).add(
+                    new SymbolTableItem(per.toString(), tsc.toString(), "array", perleft, perright)
+                    );
+                :};
 
 /* _`paqueteTrineoSanta` = lee un elemento del arreglo_ */
 
@@ -168,11 +190,27 @@ entregaTrineoSanta ::= paqueteTrineoSanta ENTREGA tlSantaClaus ;
 
 /* _(a) funciones  -> function int persona (parametros){bloque de código}_ */
 
-confites ::= confites ADORNO tSantaClaus PERSONA |
-             tSantaClaus PERSONA ;
+confites ::= confites ADORNO tSantaClaus:tsc PERSONA:per {:
+                symbolTableList.get(getCurrentScope()).add(
+                    new SymbolTableItem(per.toString(), tsc.toString(), "parameter", perleft, perright)
+                    );
+                :} |
+             tSantaClaus:tsc PERSONA:per {:
+                symbolTableList.get(getCurrentScope()).add(
+                    new SymbolTableItem(per.toString(), tsc.toString(), "parameter", perleft, perright)
+                    );
+                :} ;
 
-bolsaNavideña ::= BOLSA tSantaClaus PERSONA ABRECUENTO confites CIERRACUENTO rutaNavideña |
-                  BOLSA tSantaClaus PERSONA ABRECUENTO CIERRACUENTO rutaNavideña ;
+abrirBolsaNavideña ::= BOLSA tSantaClaus:tsc PERSONA:per {:
+                    symbolTableList.get(getCurrentScope()).add(
+                        new SymbolTableItem(per.toString(), tsc.toString(), "function", perleft, perright)
+                    );
+                    scope.push(per.toString());
+                    symbolTableList.put(per.toString(), new ArrayList<SymbolTableItem>());
+                  :} ;
+
+bolsaNavideña ::= abrirBolsaNavideña ABRECUENTO confites CIERRACUENTO rutaNavideña {:scope.pop();:} |
+                  abrirBolsaNavideña ABRECUENTO CIERRACUENTO rutaNavideña {:scope.pop();:} ;
 
 envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
 
@@ -246,15 +284,16 @@ confite ::= ABRECUENTO regalo CIERRACUENTO |
             paqueteTrineoSanta |
             llamadaNavideña ;
             
-// `gengibre` son las líneas de código
+// `gengibre` son las líneas de código (o un bloque `{...}` con `rutaNavideñaAux`)
 
 gengibre ::= gengibre regalos |
+             gengibre {:newScope();:} rutaNavideñaAux {:scope.pop();:} |
              regalos ;
              
-// `regalos` es una sola línea de código (o un bloque `{...}` con `rutaNavideñaAux`)
+// `regalos` es una sola línea de código
 
 regalos ::= creaRegalo FINREGALO | creaEntregaRegalo FINREGALO | entregaRegalo FINREGALO | mezcla |
-            regalo FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento | rutaNavideñaAux |
+            regalo FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento |
             trineoSanta FINREGALO | entregaTrineoSanta FINREGALO | FINREGALO ;
             
 /* _(m) Estructuras de control (`if`-[`elif`]-[`else`]) -> `if(a > b){print(a)|}`_ */
@@ -272,17 +311,18 @@ galletaControl ::= galletaRegalo galletaNavidad galletaChocolate |
                    galletaRegalo galletaChocolate |
                    galletaRegalo ;
 
-galletaRegalo ::= ELFO ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
+galletaRegalo ::= ELFO ABRECUENTO regalo CIERRACUENTO {:newScope();:} rutaNavideñaAux {:scope.pop();:} ;
 
-galletaNavidad ::= HADA ABRECUENTO regalo CIERRACUENTO rutaNavideñaAux ;
+galletaNavidad ::= galletaNavidad HADA ABRECUENTO regalo CIERRACUENTO {:newScope();:} rutaNavideñaAux {:scope.pop();:} |
+                   HADA ABRECUENTO regalo CIERRACUENTO {:newScope();:} rutaNavideñaAux {:scope.pop();:} ;
 
-galletaChocolate ::= DUENDE rutaNavideñaAux ;
+galletaChocolate ::= DUENDE {:newScope();:} rutaNavideñaAux {:scope.pop();:} ;
 
 /* _(m) `do-until` y `for`. `return`, `break`_ */
 
 // `chocolate` es el `for` 
 
-chocolate ::= ENVUELVE ABRECUENTO regaloAbierto FINREGALO regalo FINREGALO regaloAbierto CIERRACUENTO rutaNavideñaAux ;
+chocolate ::= ENVUELVE {:newScope();:} ABRECUENTO regaloAbierto FINREGALO regalo FINREGALO regaloAbierto CIERRACUENTO rutaNavideñaAux {:scope.pop();:} ;
 
 regaloAbierto ::= creaRegalo | creaEntregaRegalo | entregaRegalo | mezcla | regalo | narraCuento | escuchaCuento |
                   rutaNavideñaAux | trineoSanta | entregaTrineoSanta ;
@@ -299,7 +339,7 @@ terminaFiesta ::= CORTA FINREGALO ;
 // leche es el `do until` (se asumió como `do while`):  
 // `do {i * 2} until (i < 10)|`
 
-leche ::= HACE rutaNavideñaAux REVISA ABRECUENTO regalo CIERRACUENTO ;
+leche ::= HACE {:newScope();:} rutaNavideñaAux {:scope.pop();:} REVISA ABRECUENTO regalo CIERRACUENTO ;
 
 /* _(n) Entrada y salida: `print` y `read` -> `print("hola")` o `print("adios")`_ */
 
@@ -319,9 +359,13 @@ bolsaNavideñaAux ::= bolsaNavideñaAux bolsaNavideña |
 
 navidad ::= {: 
                 System.out.println("Inicio de parseo");
+                writer.write("Inicio de parseo\n\n");
+                scope.push("global");
+                symbolTableList.put(scope.peek(), new ArrayList<SymbolTableItem>());
             :}
             bolsaNavideñaAux
             {: 
-                imprimirTabla();
+                printTable();
                 System.out.println("Fin de parseo");
+                writer.write("Fin de parseo");
             :};
