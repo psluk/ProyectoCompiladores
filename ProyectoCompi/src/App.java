@@ -67,7 +67,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         // For a better performance, run first generateLexerParser()
         // and then runTest()
-        //generateLexerParser();
+        generateLexerParser();
         //runTest();
         runParser(); 
     }

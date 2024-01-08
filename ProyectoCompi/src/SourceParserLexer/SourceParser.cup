@@ -207,10 +207,13 @@ abrirBolsaNavideña ::= BOLSA tSantaClaus:tsc PERSONA:per {:
                     );
                     scope.push(per.toString());
                     symbolTableList.put(per.toString(), new ArrayList<SymbolTableItem>());
-                  :} ;
+                  :} 
+                  ;
 
 bolsaNavideña ::= abrirBolsaNavideña ABRECUENTO confites CIERRACUENTO rutaNavideña {:scope.pop();:} |
-                  abrirBolsaNavideña ABRECUENTO CIERRACUENTO rutaNavideña {:scope.pop();:} ;
+                  abrirBolsaNavideña ABRECUENTO CIERRACUENTO rutaNavideña {:scope.pop();:} 
+                  | BOLSA error rutaNavideña
+                  ;
 
 envoltorios ::= envoltorios ADORNO PERSONA | PERSONA ;
 
@@ -294,7 +297,9 @@ gengibre ::= gengibre regalos |
 
 regalos ::= creaRegalo FINREGALO | creaEntregaRegalo FINREGALO | entregaRegalo FINREGALO | mezcla |
             regalo FINREGALO | regresaFiesta | terminaFiesta | narraCuento | escuchaCuento |
-            trineoSanta FINREGALO | entregaTrineoSanta FINREGALO | FINREGALO ;
+            trineoSanta FINREGALO | entregaTrineoSanta FINREGALO | FINREGALO 
+            | error FINREGALO
+            ;
             
 /* _(m) Estructuras de control (`if`-[`elif`]-[`else`]) -> `if(a > b){print(a)|}`_ */
 
@@ -368,4 +373,7 @@ navidad ::= {:
                 printTable();
                 System.out.println("Fin de parseo");
                 writer.write("Fin de parseo");
-            :};
+            :}
+            | error FINREGALO
+            {: System.out.println("Error en Navidad. Recuperación del error."); :}
+            ;

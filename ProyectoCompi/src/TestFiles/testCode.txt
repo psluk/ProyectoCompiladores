@@ -1,5 +1,6 @@
- function boolean mifun() {
+ function mifun() {
     local int miVar <= 82 <== 3|
+	local int var2 <= 1 |
  } 
 function int main () {
     local int mivar <= a + b * (c - 2) == 3 ^ !(x ~ 2 != 0) # ++y |
